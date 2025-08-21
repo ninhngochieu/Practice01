@@ -78,9 +78,9 @@ public class WeatherForecastController : ControllerBase
     /// <returns></returns>
     [HttpGet("Empty-Result")]
     [MapToApiVersion("1.0")]
-    public async Task<IResult> GetEmpty()
+    public Task<IResult> GetEmpty()
     {
-        return _customObjectResult.Return();
+        return Task.FromResult(_customObjectResult.Return());
     }
     
     /// <summary>

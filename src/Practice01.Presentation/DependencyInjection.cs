@@ -1,12 +1,15 @@
 using System.Text.Json;
 using System.Threading.RateLimiting;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
+using Practice01.Presentation.Common.ApiKey;
 using Practice01.Presentation.Common.ObjectResult;
 using Practice01.Presentation.Middleware;
 
@@ -19,7 +22,36 @@ public static class DependencyInjection
         services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddSwaggerGen(c =>
+        {
+            // c.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" });
+            //
+            // // Định nghĩa ApiKey scheme
+            // c.AddSecurityDefinition("ApiKey", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            // {
+            //     Description = "API Key cần nhập vào header X-API-KEY",
+            //     Name = "X-API-KEY",
+            //     In = ParameterLocation.Header,
+            //     Type = SecuritySchemeType.ApiKey,
+            //     Scheme = "ApiKeyScheme"
+            // });
+            //
+            // // Áp dụng scheme mặc định cho tất cả endpoints
+            // c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+            // {
+            //     {
+            //         new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            //         {
+            //             Reference = new Microsoft.OpenApi.Models.OpenApiReference
+            //             {
+            //                 Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+            //                 Id = "ApiKey"
+            //             }
+            //         },
+            //         Array.Empty<string>()
+            //     }
+            // });
+        });
         services.ConfigureOptions<ConfigureSwaggerOptions>();
 
 
@@ -43,18 +75,24 @@ public static class DependencyInjection
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         });
 
+        // services.AddSingleton<ApiKeyMiddleware>();
+        services.AddAuthentication("ApiKeyScheme")
+            .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>("ApiKeyScheme", null);
+        services.AddAuthorization();
+
+
         services.AddRateLimiter(options =>
         {
             const bool autoReplenishment = true;
             const int permitLimit = 100; // cho phép 100 request
-            const int queueLimit = 20;   // thêm hàng chờ
+            const int queueLimit = 20; // thêm hàng chờ
             var window = TimeSpan.FromSeconds(1);
             const QueueProcessingOrder queueProcessingOrder = QueueProcessingOrder.OldestFirst;
             const int segmentsPerWindow = 10; // chia cửa sổ thành 10 đoạn để phân tán đều
-            
-            var replenishmentPeriod = TimeSpan.FromMilliseconds(100); 
-            const int tokensPerPeriod = 10;   // nạp thêm 10 token mỗi 100ms (tương đương 100 req/s)
-            const int tokenLimit = 100;       // số token tối đa
+
+            var replenishmentPeriod = TimeSpan.FromMilliseconds(100);
+            const int tokensPerPeriod = 10; // nạp thêm 10 token mỗi 100ms (tương đương 100 req/s)
+            const int tokenLimit = 100; // số token tối đa
 
             // options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
             //     RateLimitPartition.GetFixedWindowLimiter(
@@ -66,7 +104,7 @@ public static class DependencyInjection
             //             QueueLimit = queueLimit, // Queue 100 requests thay vì 0
             //             Window = window // Trong 1 giây
             //         }));
-            
+
             // options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
             //     RateLimitPartition.GetSlidingWindowLimiter(
             //         partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
@@ -79,7 +117,7 @@ public static class DependencyInjection
             //             QueueProcessingOrder = queueProcessingOrder,
             //             SegmentsPerWindow = segmentsPerWindow
             //         }));
-            
+
             options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
                 RateLimitPartition.GetTokenBucketLimiter(
                     partitionKey: httpContext.User.Identity?.Name ?? httpContext.Request.Headers.Host.ToString(),
@@ -163,7 +201,7 @@ public static class DependencyInjection
                 var user = context.HttpContext.User?.Identity?.IsAuthenticated == true
                     ? context.HttpContext.User.Identity.Name
                     : "Anonymous";
-                logger.LogWarning( 
+                logger.LogWarning(
                     "Rate limit exceeded. IP: {IP}, User: {User}, Path: {Path}, Method: {Method}",
                     ip,
                     user,

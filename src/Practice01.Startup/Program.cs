@@ -41,6 +41,7 @@ builder.WebHost.ConfigureKestrel(options =>
 
 var app = builder.Build();
 
+// app.UseMiddleware<ApiKeyMiddleware>();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<SerilogEnrichMiddleware>();
 app.UseSerilogRequestLogging();
