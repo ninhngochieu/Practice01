@@ -1,0 +1,6 @@
+services:
+  practice01.startup:
+    image: ${DOCKER_REGISTRY-}practice01startup
+    build:
+      context: .
+      dockerfile: src/Practice01.Startup/Dockerfile

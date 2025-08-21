@@ -12,13 +12,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/Practice01.Startup/Practice01.Startup.csproj", "src/Practice01.Startup/"]
-COPY ["src/Practice01.Presentation/Practice01.Presentation.csproj", "src/Practice01.Presentation/"]
-COPY ["src/Practice01.Application/Practice01.Application.csproj", "src/Practice01.Application/"]
-COPY ["src/Practice01.Domain/Practice01.Domain.csproj", "src/Practice01.Domain/"]
-RUN dotnet restore "./src/Practice01.Startup/Practice01.Startup.csproj"
+COPY ["Practice01.Startup/Practice01.Startup.csproj", "Practice01.Startup/"]
+RUN dotnet restore "./Practice01.Startup/Practice01.Startup.csproj"
 COPY . .
-WORKDIR "/src/src/Practice01.Startup"
+WORKDIR "/src/Practice01.Startup"
 RUN dotnet build "./Practice01.Startup.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
