@@ -1,9 +1,11 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using Microsoft.EntityFrameworkCore;
 using Practice01.Application;
 using Practice01.Infrastructure;
 using Practice01.Presentation;
 using Practice01.Presentation.Middleware;
+using Practice01.Startup.Data;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,6 +53,13 @@ app.UseSerilogRequestLogging();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<Practice01StartupContext>();
+        await db.Database.MigrateAsync();
+    }
+    
+    // Swagger
     app.UseSwagger();
     app.UseSwaggerUI(options =>
     {

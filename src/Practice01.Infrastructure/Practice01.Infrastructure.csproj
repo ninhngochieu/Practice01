@@ -20,4 +20,8 @@
       </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Practice01.Application\Practice01.Application.csproj" />
+  </ItemGroup>
+
 </Project>
