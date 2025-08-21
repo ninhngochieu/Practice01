@@ -1,5 +1,7 @@
+using System.Text.Json;
 using Asp.Versioning;
 using Microsoft.Extensions.DependencyInjection;
+using Practice01.Presentation.Common.ObjectResult;
 using Practice01.Presentation.Middleware;
 
 namespace Practice01.Presentation;
@@ -26,6 +28,12 @@ public static class DependencyInjection
             options.GroupNameFormat = "'v'VVV"; // Kết quả: v1, v1.1, v2…
             options.SubstituteApiVersionInUrl = true;
         });
-        services.AddSingleton<GlobalExceptionMiddleware>();
+        services.AddScoped<GlobalExceptionMiddleware>();
+        services.AddScoped<CustomObjectResult>();
+        services.AddHttpContextAccessor();
+        services.AddKeyedSingleton("ApiResponseJsonSerializerOptions",new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        });
     }
 }

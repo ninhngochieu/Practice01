@@ -1,9 +1,12 @@
 using Asp.Versioning;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Practice01.Application.WeatherForecast.Queries.GetWeatherForecast;
-using Practice01.Domain.Entities;
+using Practice01.Application.WeatherForecast.Queries.GetWeatherForecastV1;
+using Practice01.Application.WeatherForecast.Queries.GetWeatherForecastV2;
+using Practice01.Presentation.Common;
+using Practice01.Presentation.Common.ObjectResult;
 
 namespace Practice01.Presentation.Controllers;
 
@@ -16,18 +19,17 @@ namespace Practice01.Presentation.Controllers;
 [ApiVersion("2.0")]
 public class WeatherForecastController : ControllerBase
 {
-    private static readonly string[] Summaries = new[]
-    {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
     private readonly ILogger<WeatherForecastController> _logger;
     private readonly ISender _sender;
+    private readonly CustomObjectResult _customObjectResult;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger, ISender sender)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger,
+        ISender sender,
+        CustomObjectResult customObjectResult)
     {
         _logger = logger;
         _sender = sender;
+        _customObjectResult = customObjectResult;
     }
     
     /// <summary>
@@ -36,10 +38,11 @@ public class WeatherForecastController : ControllerBase
     /// <returns></returns>
     [HttpGet(Name = "GetWeatherForecast")]
     [MapToApiVersion("1.0")]
-    public async Task<OkObjectResult> GetV1()
+    public async Task<IResult> GetV1()
     {
-        var result = await _sender.Send(new GetWeatherForecastCommand());
-        return Ok(result);
+        var result = await _sender.Send(new GetWeatherForecastV1Command());
+        // return Ok(result);
+        return _customObjectResult.Return(result);
     }
     
     /// <summary>
@@ -48,11 +51,11 @@ public class WeatherForecastController : ControllerBase
     /// <returns></returns>
     [HttpGet(Name = "GetWeatherForecast")]
     [MapToApiVersion("2.0")]
-    public async Task<OkObjectResult> GetV2()
+    public async Task<OkObjectResult> GetV2(DateTime? date)
     {
-        var result = await _sender.Send(new GetWeatherForecastCommand()
+        var result = await _sender.Send(new GetWeatherForecastV2Command()
         {
-            Date = null
+            Date = date
         });
         return Ok(result);
     }
@@ -65,7 +68,18 @@ public class WeatherForecastController : ControllerBase
     [MapToApiVersion("2.0")]
     public async Task<OkObjectResult> ThrowExV2()
     {
-        var result = await _sender.Send(new GetWeatherForecastCommand());
+        var result = await _sender.Send(new GetWeatherForecastV2Command());
         return Ok(result);
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("Empty-Result",Name = "Empty-Result")]
+    [MapToApiVersion("1.0")]
+    public async Task<IResult> GetEmpty()
+    {
+        return _customObjectResult.Return();
     }
 }

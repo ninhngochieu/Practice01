@@ -1,5 +1,6 @@
 using FluentValidation;
 using MediatR;
+using Practice01.Application.Common.Validation;
 
 namespace Practice01.Application.Common.Behaviours;
 
@@ -7,10 +8,12 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
     where TRequest : notnull
 {
     private readonly IEnumerable<IValidator<TRequest>> _validators;
+    private readonly ErrorCollector _errorCollector;
 
-    public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
+    public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators, ErrorCollector errorCollector)
     {
         _validators = validators;
+        _errorCollector = errorCollector;
     }
 
     public async Task<TResponse> Handle(
@@ -35,7 +38,16 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
             return await next(cancellationToken);
         }
 
+        var collectedErrors = failures
+            .Select(f => new CollectedError
+            {
+                Code = f.ErrorCode,
+                Field = f.PropertyName,
+                Message = f.ErrorMessage
+            })
+            .ToList();
+        
+        _errorCollector.AddValidationError(collectedErrors);
         throw new ValidationException(failures);
-
     }
 }
