@@ -1,14 +1,16 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Practice01.Application;
+using Practice01.Infrastructure;
 using Practice01.Presentation;
 using Practice01.Presentation.Middleware;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddPresentation(builder.Configuration);
 builder.Services.AddApplication();
-
+builder.Services.AddInfrastructure(builder.Configuration);
 
 Log.Logger = new LoggerConfiguration()
     .Enrich.FromLogContext()

@@ -1,41 +1,44 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>ebac4203-476b-453f-b96b-42a85d58e493</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..</DockerfileContext>
-    <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>ebac4203-476b-453f-b96b-42a85d58e493</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>..\..</DockerfileContext>
+        <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+    </PropertyGroup>
 
-  <ItemGroup><!--    <PackageReference Include="Asp.Versioning.Abstractions" Version="8.1.0" />-->
-<!--    <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />-->
-<!--    <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />-->
-<!--    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />-->
-<!--    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />-->
-<!--    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />-->
-  
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
-  
-    <PackageReference Include="Serilog" Version="4.3.0" />
-  
-    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
-  
-    <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
-  
-    <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />
-  
-    <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
-  
-    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
-  
-    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.19">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        
 
-  <ItemGroup>
-    <ProjectReference Include="..\Practice01.Presentation\Practice01.Presentation.csproj" />
-  </ItemGroup>
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1"/>
+
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.7"/>
+
+        <PackageReference Include="Serilog" Version="4.3.0"/>
+
+        <PackageReference Include="Serilog.AspNetCore" Version="9.0.0"/>
+
+        <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1"/>
+
+        <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0"/>
+
+        <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0"/>
+
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
+
+        <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Practice01.Infrastructure\Practice01.Infrastructure.csproj" />
+        <ProjectReference Include="..\Practice01.Presentation\Practice01.Presentation.csproj"/>
+    </ItemGroup>
 
 </Project>
