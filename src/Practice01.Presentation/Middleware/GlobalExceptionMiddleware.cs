@@ -33,7 +33,6 @@ public class GlobalExceptionMiddleware : IMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unhandled exception occurred");
             await HandleExceptionAsync(context, ex);
         }
     }
@@ -60,7 +59,8 @@ public class GlobalExceptionMiddleware : IMiddleware
             };
 
             var validationResult = JsonSerializer.Serialize(validationApiResponse, _jsonSerializerOptions);
-            return context.Response.WriteAsync(validationResult);
+            context.Response.WriteAsync(validationResult);
+            _logger.LogError("Validation Error: {validationResult}", validationResult);
         }
 
         context.Response.ContentType = "application/json";
@@ -79,6 +79,8 @@ public class GlobalExceptionMiddleware : IMiddleware
         };
 
         var result = JsonSerializer.Serialize(apiResponse, _jsonSerializerOptions);
-        return context.Response.WriteAsync(result);
+        context.Response.WriteAsync(result);
+        _logger.LogError("Error: {result}", result);
+        return Task.CompletedTask;
     }
 }

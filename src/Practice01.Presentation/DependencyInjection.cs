@@ -29,6 +29,7 @@ public static class DependencyInjection
             options.SubstituteApiVersionInUrl = true;
         });
         services.AddScoped<GlobalExceptionMiddleware>();
+        services.AddScoped<SerilogEnrichMiddleware>();
         services.AddScoped<CustomObjectResult>();
         services.AddHttpContextAccessor();
         services.AddKeyedSingleton("ApiResponseJsonSerializerOptions",new JsonSerializerOptions
