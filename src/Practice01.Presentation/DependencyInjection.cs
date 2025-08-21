@@ -25,32 +25,54 @@ public static class DependencyInjection
         services.AddSwaggerGen(c =>
         {
             // c.SwaggerDoc("v1", new() { Title = "My API", Version = "v1" });
-            //
-            // // Định nghĩa ApiKey scheme
-            // c.AddSecurityDefinition("ApiKey", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            // {
-            //     Description = "API Key cần nhập vào header X-API-KEY",
-            //     Name = "X-API-KEY",
-            //     In = ParameterLocation.Header,
-            //     Type = SecuritySchemeType.ApiKey,
-            //     Scheme = "ApiKeyScheme"
-            // });
-            //
-            // // Áp dụng scheme mặc định cho tất cả endpoints
-            // c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-            // {
-            //     {
-            //         new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            //         {
-            //             Reference = new Microsoft.OpenApi.Models.OpenApiReference
-            //             {
-            //                 Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-            //                 Id = "ApiKey"
-            //             }
-            //         },
-            //         Array.Empty<string>()
-            //     }
-            // });
+
+            // Định nghĩa ApiKey scheme
+            c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+            {
+                Description = "Nhập API Key vào ô bên dưới. Header: X-API-KEY",
+                Name = "X-API-KEY",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "ApiKeyScheme"
+            });
+            
+            // Bearer JWT Scheme
+            c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Description = "Nhập JWT token vào đây (ví dụ: Bearer eyJhbGci...)",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
+            });
+
+            // Áp dụng scheme mặc định cho tất cả endpoints
+            c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+            {
+                {
+                    new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "ApiKey"
+                        }
+                    },
+                    Array.Empty<string>()
+                },
+                {
+                    new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                    {
+                        Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                        {
+                            Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
         });
         services.ConfigureOptions<ConfigureSwaggerOptions>();
 
