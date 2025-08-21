@@ -33,7 +33,11 @@ public class ErrorCollector
         Message = message;
         StatusCode = statusCode switch
         {
-            HttpStatusCode.OK or HttpStatusCode.Created or HttpStatusCode.Accepted or HttpStatusCode.NoContent => (int)statusCode,
+            HttpStatusCode.OK
+                or HttpStatusCode.Created
+                or HttpStatusCode.Accepted
+                or HttpStatusCode.NoContent
+                or HttpStatusCode.Redirect => (int)statusCode,
             _ => throw new ArgumentOutOfRangeException(nameof(statusCode), statusCode, null)
         };
         Code = "SUCCESS";
@@ -45,7 +49,11 @@ public class ErrorCollector
         Message = message;
         StatusCode = statusCode switch
         {
-            HttpStatusCode.OK or HttpStatusCode.Created or HttpStatusCode.Accepted or HttpStatusCode.NoContent => (int)statusCode,
+            HttpStatusCode.OK
+                or HttpStatusCode.Created
+                or HttpStatusCode.Accepted
+                or HttpStatusCode.NoContent
+                or HttpStatusCode.Redirect => (int)statusCode,
             _ => throw new ArgumentOutOfRangeException(nameof(statusCode), statusCode, null)
         };
         Code = string.IsNullOrEmpty(code) ? "SUCCESS" : code.ToUpper();
@@ -60,4 +68,36 @@ public class ErrorCollector
         Details = collectedErrors;
     }
 
+    public void Error(string message)
+    {
+        Ok = false;
+        StatusCode = (int)HttpStatusCode.BadRequest;
+        Code = "ERROR";
+        Message = message;
+        Details = [];
+    }
+
+    public void Error(string code, string message)
+    {
+        Ok = false;
+        StatusCode = (int)HttpStatusCode.BadRequest;
+        Code = code;
+        Message = message;
+        Details = [];
+    }
+
+    public void Error(HttpStatusCode statusCode, string code, string message)
+    {
+        Ok = false;
+        Code = code;
+        Message = message;
+        Details = [];
+        StatusCode = statusCode switch
+        {
+            HttpStatusCode.BadRequest or HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden
+                or HttpStatusCode.NotFound or HttpStatusCode.UnsupportedMediaType
+                or HttpStatusCode.Conflict => (int)statusCode,
+            _ => throw new ArgumentOutOfRangeException(nameof(statusCode), statusCode, null)
+        };
+    }
 }

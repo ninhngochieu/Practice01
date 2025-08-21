@@ -51,13 +51,13 @@ public class WeatherForecastController : ControllerBase
     /// <returns></returns>
     [HttpGet(Name = "GetWeatherForecast")]
     [MapToApiVersion("2.0")]
-    public async Task<OkObjectResult> GetV2(DateTime? date)
+    public async Task<IResult> GetV2(DateTime? date)
     {
         var result = await _sender.Send(new GetWeatherForecastV2Command()
         {
             Date = date
         });
-        return Ok(result);
+        return _customObjectResult.Return(result);
     }
     
     /// <summary>
@@ -66,20 +66,32 @@ public class WeatherForecastController : ControllerBase
     /// <returns></returns>
     [HttpGet("Exception",Name = "Exception")]
     [MapToApiVersion("2.0")]
-    public async Task<OkObjectResult> ThrowExV2()
+    public async Task<IResult> ThrowExV2()
     {
         var result = await _sender.Send(new GetWeatherForecastV2Command());
-        return Ok(result);
+        return _customObjectResult.Return(result);
     }
     
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    [HttpGet("Empty-Result",Name = "Empty-Result")]
+    [HttpGet("Empty-Result")]
     [MapToApiVersion("1.0")]
     public async Task<IResult> GetEmpty()
     {
+        return _customObjectResult.Return();
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("Error-Result")]
+    [MapToApiVersion("1.0")]
+    public async Task<IResult> GetError()
+    {
+        await _sender.Send(new GetWeatherForecastErrorCommand());
         return _customObjectResult.Return();
     }
 }
