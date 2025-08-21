@@ -20,3 +20,20 @@
 + Bất lợi của Service
   + Business phình to, source code phình to, khó kiểm soát nếu tổ chức không tốt
 
+Log sử dụng Serilog
+- Cấu hình dễ sử dụng, hiện đại
+- Sink được nhiều bên: File, Console, hệ thống ghi log
+- Nhược điểm: Cấu hình bằng code chủ yếu, cũng có file ...
+So sánh:
+- NLog. Log4Net hơi cũ
+- MS Logger ghi log đơn giản, ít tính năng
+- OpenTelemetry: Cần cấu hình
+
+
+Database Quan hệ
+- Postgres
+
+NoSQL 
+- MongoDB
+
+Cache: Redis

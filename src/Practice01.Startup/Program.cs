@@ -18,6 +18,13 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(outputTemplate:
         "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} " +
         "RequestId={RequestId} TraceId={TraceId} {NewLine}{Exception}")
+    .WriteTo.File(
+        "Logs/log-.txt",                // thư mục & file (nên để log- vì có rollingInterval)
+        rollingInterval: RollingInterval.Day, // tách file theo ngày
+        retainedFileCountLimit: 7,      // giữ lại 7 ngày log
+        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj} " +
+                        "RequestId={RequestId} TraceId={TraceId}{NewLine}{Exception}"
+    )
     .CreateLogger();
 builder.Host.UseSerilog();
 
