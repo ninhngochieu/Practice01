@@ -24,6 +24,7 @@ Log sử dụng Serilog
 - Cấu hình dễ sử dụng, hiện đại
 - Sink được nhiều bên: File, Console, hệ thống ghi log
 - Nhược điểm: Cấu hình bằng code chủ yếu, cũng có file ...
+- Chỉ log những thông tin quan trọng, không log thông tin dư thừa
 So sánh:
 - NLog. Log4Net hơi cũ
 - MS Logger ghi log đơn giản, ít tính năng

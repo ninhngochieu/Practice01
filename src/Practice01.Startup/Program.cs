@@ -6,7 +6,7 @@ using Practice01.Presentation.Middleware;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddPresentation();
+builder.Services.AddPresentation(builder.Configuration);
 builder.Services.AddApplication();
 
 
@@ -27,6 +27,16 @@ Log.Logger = new LoggerConfiguration()
     )
     .CreateLogger();
 builder.Host.UseSerilog();
+
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxConcurrentConnections = 1000;
+    options.Limits.MaxConcurrentUpgradedConnections = 1000;
+    options.Limits.MaxRequestBodySize = 10 * 1024 * 1024; // 10MB
+    options.Limits.KeepAliveTimeout = TimeSpan.FromMinutes(2);
+    options.Limits.RequestHeadersTimeout = TimeSpan.FromSeconds(30);
+});
 
 
 var app = builder.Build();
@@ -53,6 +63,20 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseRateLimiter();
+
 app.MapControllers();
+
+app.Use(async (context, next) =>
+{
+    context.Response.OnStarting(() =>
+    {
+        context.Response.Headers["RateLimit-Limit"] = "100";
+        context.Response.Headers["RateLimit-Remaining"] = "95";
+        context.Response.Headers["RateLimit-Reset"] = DateTimeOffset.UtcNow.AddSeconds(60).ToUnixTimeSeconds().ToString();
+        return Task.CompletedTask;
+    });
+    await next();
+});
 
 app.Run();

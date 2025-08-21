@@ -61,6 +61,7 @@ public class GlobalExceptionMiddleware : IMiddleware
             var validationResult = JsonSerializer.Serialize(validationApiResponse, _jsonSerializerOptions);
             context.Response.WriteAsync(validationResult);
             _logger.LogError("Validation Error: {validationResult}", validationResult);
+            return Task.CompletedTask;
         }
 
         context.Response.ContentType = "application/json";

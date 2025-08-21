@@ -17,4 +17,7 @@
     <ItemGroup>
       <ProjectReference Include="..\Practice01.Application\Practice01.Application.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Common\RateLimit\" />
+    </ItemGroup>
 </Project>
