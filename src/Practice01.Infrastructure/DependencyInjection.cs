@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Driver;
 using Practice01.Application.Common.Data;
 using Practice01.Application.Common.Token;
 using Practice01.Application.Common.User;
@@ -67,5 +68,20 @@ public static class DependencyInjection
 
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IUserProvider, UserProvider>();
+        
+        var mongoDbConnectionString = builderConfiguration.GetConnectionString("MongoDb");
+        var mongoUrl = new MongoUrl(mongoDbConnectionString);
+
+        services.AddSingleton<IMongoClient>(sp =>
+        {
+            var mongoClient = new MongoClient(mongoUrl);
+            return mongoClient;
+        });
+        services.AddSingleton<IMongoDatabase>(sp =>
+        {
+            var mongoClient = sp.GetRequiredService<IMongoClient>();
+            var database = mongoClient.GetDatabase(mongoUrl.DatabaseName);
+            return database;
+        });
     }
 }

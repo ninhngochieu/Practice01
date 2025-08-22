@@ -1,5 +1,7 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Practice01.Application;
 using Practice01.Infrastructure;
@@ -83,6 +85,20 @@ app.UseAuthorization();
 app.UseRateLimiter();
 
 app.MapControllers();
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
+
+// For microservices
+// app.MapHealthChecksUI(options =>
+// {
+//     options.UIPath = "/health-check-ui";
+// })
+//     .AllowAnonymous()
+//     ;
 
 app.Use(async (context, next) =>
 {

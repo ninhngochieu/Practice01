@@ -168,7 +168,7 @@ public static class DependencyInjection
 
         services.AddSingleton<AuthorizationMiddlewareResultHandler>(sp => new AuthorizationMiddlewareResultHandler());
         services.AddSingleton<IAuthorizationMiddlewareResultHandler, CustomAuthorizationResultHandler>();
-        
+
         services.AddRateLimiter(options =>
         {
             const bool autoReplenishment = true;
@@ -297,5 +297,30 @@ public static class DependencyInjection
                     context.HttpContext.Request.Method);
             };
         });
+
+        services.AddHealthChecks()
+            .AddRedis(
+                redisConnectionString: builderConfiguration.GetConnectionString("RedisConnection") ??
+                                       throw new InvalidOperationException(),
+                name: "redis",
+                failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy,
+                tags: ["db", "cache", "redis"]
+            )
+            .AddNpgSql(builderConfiguration.GetConnectionString("Practice01StartupContextConnection") ??
+                       throw new InvalidOperationException(
+                           "Connection string 'Practice01StartupContextConnection' not found."), name: "postgres",
+                failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy,
+                tags: ["db", "sql"])
+            ;
+
+        // For microservices
+        // services.AddHealthChecksUI(
+        //         options =>
+        //     {
+        //         // options.SetEvaluationTimeInSeconds(10); // tần suất check lại
+        //         // options.MaximumHistoryEntriesPerEndpoint(50); // lưu history
+        //         // options.AddHealthCheckEndpoint("Basic HealthCheck", "/health"); // endpoint gốc
+        //     })
+        //     .AddInMemoryStorage();
     }
 }

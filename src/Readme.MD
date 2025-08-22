@@ -32,9 +32,29 @@ So sánh:
 
 
 Database Quan hệ
-- Postgres
+- Postgres vì read ổn, query plan chuẩn
+  + Hiệu suất ok
+  + Postgres đã tính hợp sẵn cấu hình pool trong connection string, max pool size mặc định = 100
+- Không chọn SQL Server
+  + Tốn chi phí license
+  + Tốc độ truy vấn raw và truy vấn store quá khác biệt
+  + Engine chạy index không tối ưu
+  + Chỉ phù hợp với hệ thống trung bình trở xuống
 
 NoSQL 
 - MongoDB
+  + NoSQL phổ biến, tài liệu đẩy đủ, cộng đồng lớn
+  + Read Write tốt, chịu tải cao hơn DB quan hệ
+  + Triết lý hạn chế join, nên tốc độ rất tốt
+  + Nhược điểm: Không hỗ trợ join tốt, phải dùng aggregate. Không phù hợp với báo cáo
+
+- Kết hợp NoSql và DB quan hệ: Mongo cho khả năng đọc tốt, Postgres DB quan hệ đảm bảo độ tin cậy và transaction tốt
++ Cần cơ chế Streaming data để sync 2 NoSQL và DB
 
 Cache: Redis
+- Không sử dụng ImmemoryCache, vì ram của ứng dụng hạn chế, cache sẽ bị xóa nếu restart server. Không thể quản lý trực tiếp như thêm xóa, không thể chia sẻ data cho các service khác
+- Redis không chỉ là cache. Có 1 số cơ chế rất hay: lock, inc, pub sub
+- Tốc độ nhanh, Khả năng chịu tải của nó rất tốt
+- Cần cơ chế validate cache chính xác để data đảm bảo đúng
+- Không sử dụng DB làm cache, vì tăng tải lên DB
+- ConnectionMultiplexer singleton lifecycle đã tái sử dụng, threadsafe
