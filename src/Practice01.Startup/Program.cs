@@ -3,9 +3,9 @@ using Asp.Versioning.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Practice01.Application;
 using Practice01.Infrastructure;
+using Practice01.Infrastructure.Data;
 using Practice01.Presentation;
 using Practice01.Presentation.Middleware;
-using Practice01.Startup.Data;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -70,6 +70,9 @@ if (app.Environment.IsDevelopment())
         }
     });
 }
+
+// Todo
+// Setup health check postgres, mongo, redis, elasticsearch, kafka
 
 app.UseHttpsRedirection();
 

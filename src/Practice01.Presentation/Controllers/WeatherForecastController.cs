@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Practice01.Application.WeatherForecast.Queries.GetWeatherForecastErrorResult;
 using Practice01.Application.WeatherForecast.Queries.GetWeatherForecastV1;
 using Practice01.Application.WeatherForecast.Queries.GetWeatherForecastV2;
 using Practice01.Presentation.Common;

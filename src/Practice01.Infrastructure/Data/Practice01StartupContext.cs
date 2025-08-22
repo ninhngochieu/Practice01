@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Practice01.Startup.Areas.Identity.Data;
+using Practice01.Domain.Entities;
 
-namespace Practice01.Startup.Data;
+namespace Practice01.Infrastructure.Data;
 
-public class Practice01StartupContext : IdentityDbContext<Practice01StartupUser>
+public class Practice01StartupContext : IdentityDbContext<User, Role, Guid>
 {
     public Practice01StartupContext(DbContextOptions<Practice01StartupContext> options)
         : base(options)

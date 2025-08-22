@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Practice01.Application.Common.Validation;
 
-namespace Practice01.Application.WeatherForecast.Queries.GetWeatherForecastV2;
+namespace Practice01.Application.WeatherForecast.Queries.GetWeatherForecastErrorResult;
 
 public class GetWeatherForecastErrorCommandHandler : IRequestHandler<GetWeatherForecastErrorCommand>
 {
