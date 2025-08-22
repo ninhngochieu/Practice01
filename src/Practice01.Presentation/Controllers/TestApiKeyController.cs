@@ -1,7 +1,9 @@
 using Asp.Versioning;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Practice01.Application.ApiKey.Queries.TestApiKey;
 using Practice01.Presentation.Common.ObjectResult;
 
 namespace Practice01.Presentation.Controllers;
@@ -14,16 +16,19 @@ namespace Practice01.Presentation.Controllers;
 public class TestApiKeyController : ControllerBase
 {
     private readonly CustomObjectResult _customObjectResult;
+    private readonly ISender _sender;
 
-    public TestApiKeyController(CustomObjectResult customObjectResult)
+    public TestApiKeyController(CustomObjectResult customObjectResult, ISender sender)
     {
         _customObjectResult = customObjectResult;
+        _sender = sender;
     }
     
-    [HttpGet("Empty-Result")]
+    [HttpGet]
     [MapToApiVersion("1.0")]
-    public Task<IResult> GetEmpty()
+    public async Task<IResult> GetEmpty()
     {
-        return Task.FromResult(_customObjectResult.Return());
+        var result =  await _sender.Send(new TestApiKeyCommand());
+        return _customObjectResult.Return(result);
     }
 }

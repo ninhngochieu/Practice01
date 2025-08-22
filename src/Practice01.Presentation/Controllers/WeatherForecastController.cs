@@ -39,10 +39,12 @@ public class WeatherForecastController : ControllerBase
     /// <returns></returns>
     [HttpGet(Name = "GetWeatherForecast")]
     [MapToApiVersion("1.0")]
-    public async Task<IResult> GetV1()
+    public async Task<IResult> GetV1(DateTime? date)
     {
-        var result = await _sender.Send(new GetWeatherForecastV1Command());
-        // return Ok(result);
+        var result = await _sender.Send(new GetWeatherForecastV1Command()
+        {
+            Date = date
+        });
         return _customObjectResult.Return(result);
     }
     
@@ -67,10 +69,9 @@ public class WeatherForecastController : ControllerBase
     /// <returns></returns>
     [HttpGet("Exception",Name = "Exception")]
     [MapToApiVersion("2.0")]
-    public async Task<IResult> ThrowExV2()
+    public Task<IResult> ThrowExV2()
     {
-        var result = await _sender.Send(new GetWeatherForecastV2Command());
-        return _customObjectResult.Return(result);
+        throw new NotImplementedException();
     }
     
     /// <summary>

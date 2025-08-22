@@ -1,6 +1,17 @@
-@Practice01.Startup_HostAddress = http://localhost:5074
+#@Practice01.Startup_HostAddress = http://localhost:5074
+# @Practice01.Startup_HostAddress = http://localhost:8080
 
-GET {{Practice01.Startup_HostAddress}}/weatherforecast/
+### Test endpoint with No API Key
+GET {{Practice01.Startup_HostAddress}}/api/v1/TestApiKey
 Accept: application/json
 
-###
+### Test endpoint with Invalid API Key
+GET {{Practice01.Startup_HostAddress}}/api/v1/TestApiKey
+Accept: application/json
+x-api-key: 4321-4567
+
+
+### Test endpoint with Valid API Key
+GET {{Practice01.Startup_HostAddress}}/api/v1/TestApiKey
+Accept: application/json
+x-api-key: 67890-ZYXWV

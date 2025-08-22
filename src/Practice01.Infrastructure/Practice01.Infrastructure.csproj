@@ -28,4 +28,8 @@
     <ProjectReference Include="..\Practice01.Application\Practice01.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
