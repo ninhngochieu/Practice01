@@ -45,7 +45,7 @@ public class RegisterNewUserCommandHandler
             return null;
         }
 
-        // bạn có thể custom exception
+        // bạn có thể custom exception+
         // var errors = string.Join(";", result.Errors.Select(e => e.Description));
         // throw new Exception($"Cannot create user: {errors}");
 

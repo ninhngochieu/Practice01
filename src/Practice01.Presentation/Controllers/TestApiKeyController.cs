@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Practice01.Application.ApiKey.Queries.TestApiKey;
+using Practice01.Application.TestApiKey.Queries.TestApiKey;
 using Practice01.Presentation.Common.ObjectResult;
 
 namespace Practice01.Presentation.Controllers;

@@ -1,4 +1,5 @@
 using MediatR;
+using Practice01.Application.Common.Token;
 
 namespace Practice01.Application.User.Command.Login;
 

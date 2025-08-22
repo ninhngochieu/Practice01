@@ -1,13 +1,16 @@
+using System.Text;
 using System.Text.Json;
 using System.Threading.RateLimiting;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Practice01.Presentation.Common.ApiKey;
 using Practice01.Presentation.Common.ObjectResult;
@@ -35,7 +38,7 @@ public static class DependencyInjection
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "ApiKeyScheme"
             });
-            
+
             // Bearer JWT Scheme
             c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
             {
@@ -98,8 +101,31 @@ public static class DependencyInjection
         });
 
         // services.AddSingleton<ApiKeyMiddleware>();
-        services.AddAuthentication("ApiKeyScheme")
-            .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>("ApiKeyScheme", null);
+        services
+            .AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddScheme<AuthenticationSchemeOptions, ApiKeyAuthenticationHandler>("ApiKeyScheme", null)
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = builderConfiguration["Jwt:Issuer"],
+
+                    ValidateAudience = true,
+                    ValidAudience = builderConfiguration["Jwt:Audience"],
+
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builderConfiguration["Jwt:Key"]!)),
+
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
         services.AddAuthorization();
 
 

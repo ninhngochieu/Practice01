@@ -2,7 +2,7 @@ using System.Net;
 using MediatR;
 using Practice01.Application.Common.Validation;
 
-namespace Practice01.Application.ApiKey.Queries.TestApiKey;
+namespace Practice01.Application.TestApiKey.Queries.TestApiKey;
 
 public class TestApiKeyCommand : IRequest<string>
 {

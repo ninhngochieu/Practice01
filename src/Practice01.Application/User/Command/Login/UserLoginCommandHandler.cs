@@ -60,12 +60,7 @@ public class UserLoginCommandHandler : IRequestHandler<UserLoginCommand, TokenDt
             "User login successful"
         );
         
-        var token = _jwtTokenService.GenerateToken(user); 
-        return new TokenDto
-        {
-            AccessToken = "TODO: generate JWT",
-            RefreshToken = "TODO: generate refresh token",
-            ExpiresIn = 3600
-        };
+        var token = await _jwtTokenService.GenerateToken(user);
+        return token;
     }
 }
