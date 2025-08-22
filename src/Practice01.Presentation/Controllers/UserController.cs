@@ -1,0 +1,36 @@
+using Asp.Versioning;
+using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Practice01.Application.User.Command.RegisterNewUser;
+using Practice01.Presentation.Common.ObjectResult;
+
+namespace Practice01.Presentation.Controllers;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
+[ApiVersion("2.0")]
+public class UserController
+{
+    private readonly ISender _sender;
+    private readonly CustomObjectResult _customObjectResult;
+
+    public UserController(ISender sender, CustomObjectResult customObjectResult)
+    {
+        _sender = sender;
+        _customObjectResult = customObjectResult;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost("Register")]
+    [MapToApiVersion("1.0")]
+    public async Task<IResult> Register([FromBody]RegisterNewUserCommand registerNewUserCommand)
+    {
+        var result = await _sender.Send(registerNewUserCommand);
+        return _customObjectResult.Return(result);
+    }
+}

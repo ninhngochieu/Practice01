@@ -28,7 +28,8 @@ public class CustomObjectResult
             {
                 RequestId = _httpContextAccessor.HttpContext?.TraceIdentifier ?? string.Empty,
                 TraceId = Activity.Current?.Id ?? string.Empty
-            }
+            },
+            Details = _errorCollector.Details
         };
 
         return Results.Json(apiResponse, statusCode: _errorCollector.StatusCode);
@@ -46,7 +47,8 @@ public class CustomObjectResult
             {
                 RequestId = _httpContextAccessor.HttpContext?.TraceIdentifier ?? string.Empty,
                 TraceId = Activity.Current?.Id ?? string.Empty
-            }
+            },
+            Details = _errorCollector.Details
         };
 
         return Results.Json(apiResponse, statusCode: _errorCollector.StatusCode);

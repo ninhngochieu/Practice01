@@ -100,4 +100,36 @@ public class ErrorCollector
             _ => throw new ArgumentOutOfRangeException(nameof(statusCode), statusCode, null)
         };
     }
+
+    public void Error(HttpStatusCode statusCode, string code, string message, List<CollectedError> errors)
+    {
+        Ok = false;
+        Code = code;
+        Message = message;
+        Details = errors;
+        StatusCode = statusCode switch
+        {
+            HttpStatusCode.BadRequest or HttpStatusCode.Unauthorized or HttpStatusCode.Forbidden
+                or HttpStatusCode.NotFound or HttpStatusCode.UnsupportedMediaType
+                or HttpStatusCode.Conflict => (int)statusCode,
+            _ => throw new ArgumentOutOfRangeException(nameof(statusCode), statusCode, null)
+        };
+    }
+
+    public void Success(HttpStatusCode statusCode, string code, string message, List<CollectedError> errors)
+    {
+        Ok = true;
+        Message = message;
+        StatusCode = statusCode switch
+        {
+            HttpStatusCode.OK
+                or HttpStatusCode.Created
+                or HttpStatusCode.Accepted
+                or HttpStatusCode.NoContent
+                or HttpStatusCode.Redirect => (int)statusCode,
+            _ => throw new ArgumentOutOfRangeException(nameof(statusCode), statusCode, null)
+        };
+        Code = string.IsNullOrEmpty(code) ? "SUCCESS" : code.ToUpper();
+        Details = errors;
+    }
 }
