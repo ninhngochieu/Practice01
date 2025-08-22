@@ -5,6 +5,8 @@ using System.Threading.RateLimiting;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
@@ -13,7 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Practice01.Presentation.Common.ApiKey;
+using Practice01.Presentation.Common.Handler;
 using Practice01.Presentation.Common.ObjectResult;
 using Practice01.Presentation.Middleware;
 
@@ -164,6 +166,9 @@ public static class DependencyInjection
             .AddPolicy("ManagerPolicy", policy => { policy.RequireRole("Administrator", "Manager"); })
             .AddPolicy("AdminPolicy", policy => { policy.RequireRole("Administrator"); });
 
+        services.AddSingleton<AuthorizationMiddlewareResultHandler>(sp => new AuthorizationMiddlewareResultHandler());
+        services.AddSingleton<IAuthorizationMiddlewareResultHandler, CustomAuthorizationResultHandler>();
+        
         services.AddRateLimiter(options =>
         {
             const bool autoReplenishment = true;

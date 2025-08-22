@@ -9,7 +9,7 @@ using Microsoft.Extensions.Options;
 using Practice01.Application.Common.Validation;
 using Practice01.Presentation.Common.ObjectResult;
 
-namespace Practice01.Presentation.Common.ApiKey;
+namespace Practice01.Presentation.Common.Handler;
 
 public class ApiKeyAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
