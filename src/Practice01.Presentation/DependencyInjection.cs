@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 using System.Threading.RateLimiting;
@@ -125,9 +126,43 @@ public static class DependencyInjection
                     ValidateLifetime = true,
                     ClockSkew = TimeSpan.Zero
                 };
-            });
-        services.AddAuthorization();
 
+                options.Events = new JwtBearerEvents
+                {
+                    OnChallenge = context =>
+                    {
+                        var jsonSerializerOptions =
+                            context.HttpContext.RequestServices.GetKeyedService<JsonSerializerOptions>(
+                                "ApiResponseJsonSerializerOptions");
+
+                        context.HandleResponse(); // ngăn default response
+                        context.Response.ContentType = "application/json";
+
+                        context.Response.StatusCode = 401;
+
+                        var result = System.Text.Json.JsonSerializer.Serialize(new ApiResponse()
+                        {
+                            Ok = false,
+                            StatusCode = 401,
+                            Message = "Unauthorized",
+                            Code = "UNAUTHORIZED",
+                            Metadata = new Metadata
+                            {
+                                RequestId = context.HttpContext.TraceIdentifier,
+                                TraceId = Activity.Current?.Id ?? string.Empty
+                            }
+                        }, jsonSerializerOptions);
+
+                        return context.Response.WriteAsync(result);
+                    }
+                };
+            });
+
+        services.AddAuthorizationBuilder()
+            .AddPolicy("MemberPolicy",
+                policy => { policy.RequireRole("Administrator", "Manager", "Member"); })
+            .AddPolicy("ManagerPolicy", policy => { policy.RequireRole("Administrator", "Manager"); })
+            .AddPolicy("AdminPolicy", policy => { policy.RequireRole("Administrator"); });
 
         services.AddRateLimiter(options =>
         {

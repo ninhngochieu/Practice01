@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Practice01.Infrastructure.Data;
@@ -11,9 +12,11 @@ using Practice01.Infrastructure.Data;
 namespace Practice01.Infrastructure.Migrations
 {
     [DbContext(typeof(Practice01StartupContext))]
-    partial class Practice01StartupContextModelSnapshot : ModelSnapshot
+    [Migration("20250822044130_AddAdmin")]
+    partial class AddAdmin
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,21 +122,6 @@ namespace Practice01.Infrastructure.Migrations
                         new
                         {
                             UserId = new Guid("ba638760-5686-4e92-b4d5-59850381bd8b"),
-                            RoleId = new Guid("0517ce8f-9d05-40ae-8c42-d93c8b5da363")
-                        },
-                        new
-                        {
-                            UserId = new Guid("b745d2be-dc7c-46ec-b4b3-da2c83099fd9"),
-                            RoleId = new Guid("ddad094e-f7b4-446c-9639-9f7a695a4db8")
-                        },
-                        new
-                        {
-                            UserId = new Guid("b745d2be-dc7c-46ec-b4b3-da2c83099fd9"),
-                            RoleId = new Guid("0517ce8f-9d05-40ae-8c42-d93c8b5da363")
-                        },
-                        new
-                        {
-                            UserId = new Guid("dbd9b6f3-12d6-4755-824c-2933ecce4c4a"),
                             RoleId = new Guid("0517ce8f-9d05-40ae-8c42-d93c8b5da363")
                         });
                 });
@@ -334,52 +322,12 @@ namespace Practice01.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "pA5eF@example.com",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKLc4wCc9E6qB9WKS5zp6IBMxPx7iAhHc398oPDnk1v1751JjgT5300w+MxWkUAphw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGR8kPQPIwgponxoYf+nivAE9iBl4wU4/r7hGaATJsTzhvGSCFU0bepIDsLJNT+odg==",
                             PhoneNumber = "+7(999)999-99-99",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
                             UserName = "admin"
-                        },
-                        new
-                        {
-                            Id = new Guid("b745d2be-dc7c-46ec-b4b3-da2c83099fd9"),
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "",
-                            Email = "9D2L6@example.com",
-                            EmailConfirmed = true,
-                            FirstName = "",
-                            IsActive = true,
-                            LastName = "",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "9D2L6@example.com",
-                            NormalizedUserName = "MANAGER",
-                            PasswordHash = "AQAAAAIAAYagAAAAENnMpMWlSK/4b3LV2ljXfum7Hqf012Gx6XCnW1at2E3OW5XM/BNskjBMX4DgnRLSNw==",
-                            PhoneNumber = "+7(999)999-99-99",
-                            PhoneNumberConfirmed = true,
-                            SecurityStamp = "",
-                            TwoFactorEnabled = false,
-                            UserName = "manager"
-                        },
-                        new
-                        {
-                            Id = new Guid("dbd9b6f3-12d6-4755-824c-2933ecce4c4a"),
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "",
-                            Email = "6tMf6@example.com",
-                            EmailConfirmed = true,
-                            FirstName = "",
-                            IsActive = true,
-                            LastName = "",
-                            LockoutEnabled = false,
-                            NormalizedEmail = "6tMf6@example.com",
-                            NormalizedUserName = "MEMBER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEF/PjJMK0cUicohKoBzoZW2FkR4lEs1QFtqsAQDjDSBdlZ//SDaqT4cXbGi2QZjZOA==",
-                            PhoneNumber = "+7(999)999-99-99",
-                            PhoneNumberConfirmed = true,
-                            SecurityStamp = "",
-                            TwoFactorEnabled = false,
-                            UserName = "member"
                         });
                 });
 

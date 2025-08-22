@@ -4,9 +4,20 @@ namespace Practice01.Application.Common.User;
 
 public static class UserInfoExtension
 {
-    public static string GetUserId(this ClaimsPrincipal claimsPrincipal)
+    public static Guid? GetUserId(this ClaimsPrincipal claimsPrincipal)
     {
-        return claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+        var claim = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier);
+        if (claim == null)
+        {
+            return null;
+        }
+        
+        if (Guid.TryParse(claim.Value, out var userId))
+        {
+            return userId;
+        }
+        
+        return null;
     }
     
     public static string GetUserName(this ClaimsPrincipal claimsPrincipal)
