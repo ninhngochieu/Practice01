@@ -2,6 +2,7 @@ using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Practice01.Application.User.Command.Login;
 using Practice01.Application.User.Command.RegisterNewUser;
 using Practice01.Presentation.Common.ObjectResult;
 
@@ -28,9 +29,21 @@ public class UserController
     /// <returns></returns>
     [HttpPost("Register")]
     [MapToApiVersion("1.0")]
-    public async Task<IResult> Register([FromBody]RegisterNewUserCommand registerNewUserCommand)
+    public async Task<IResult> Register([FromBody] RegisterNewUserCommand registerNewUserCommand)
     {
         var result = await _sender.Send(registerNewUserCommand);
+        return _customObjectResult.Return(result);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost("Login")]
+    [MapToApiVersion("1.0")]
+    public async Task<IResult> Login([FromBody] UserLoginCommand userLoginCommand)
+    {
+        var result = await _sender.Send(userLoginCommand);
         return _customObjectResult.Return(result);
     }
 }

@@ -3,8 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Practice01.Application.Common.Data;
+using Practice01.Application.Common.Token;
 using Practice01.Domain.Entities;
 using Practice01.Infrastructure.Data;
+using Practice01.Infrastructure.Services;
 using StackExchange.Redis;
 using Role = Practice01.Domain.Entities.Role;
 
@@ -60,5 +62,7 @@ public static class DependencyInjection
 
             return ConnectionMultiplexer.Connect(configuration);
         });
+
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
     }
 }
