@@ -1,6 +1,6 @@
 using MongoDB.Driver;
 
-namespace Practice01.Infrastructure.Data.MongoDb.Books;
+namespace Practice01.Infrastructure.Data.MongoDb;
 
 public abstract class MongoRepository<T>
 {

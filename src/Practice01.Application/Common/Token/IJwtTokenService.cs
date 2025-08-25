@@ -4,5 +4,5 @@ namespace Practice01.Application.Common.Token;
 
 public interface IJwtTokenService
 {
-    Task<TokenDto> GenerateToken(Domain.Entities.User user);
+    Task<TokenDto> GenerateToken(Domain.Entities.Users.User user);
 }

@@ -10,11 +10,11 @@ public class GetUserInfoCommandHandler : IRequestHandler<GetUserInfoCommand, Use
 {
     private readonly IUserProvider _userProvider;
     private readonly ErrorCollector _errorCollector;
-    private readonly UserManager<Domain.Entities.User> _userManager;
+    private readonly UserManager<Domain.Entities.Users.User> _userManager;
 
     public GetUserInfoCommandHandler(IUserProvider userProvider,
         ErrorCollector errorCollector,
-        UserManager<Domain.Entities.User> userManager)
+        UserManager<Domain.Entities.Users.User> userManager)
     {
         _userProvider = userProvider;
         _errorCollector = errorCollector;

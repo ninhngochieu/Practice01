@@ -3,15 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
+using Practice01.Application.Common.Cache;
 using Practice01.Application.Common.Data;
 using Practice01.Application.Common.Token;
 using Practice01.Application.Common.User;
 using Practice01.Domain.Entities;
+using Practice01.Domain.Entities.Users;
 using Practice01.Infrastructure.Data;
+using Practice01.Infrastructure.Data.Ef;
 using Practice01.Infrastructure.Provider;
 using Practice01.Infrastructure.Services;
 using StackExchange.Redis;
-using Role = Practice01.Domain.Entities.Role;
+using Role = Practice01.Domain.Entities.Roles.Role;
 
 namespace Practice01.Infrastructure;
 
@@ -83,5 +86,7 @@ public static class DependencyInjection
             var database = mongoClient.GetDatabase(mongoUrl.DatabaseName);
             return database;
         });
+        
+        services.AddSingleton<IRedisCacheService, RedisCacheService>();
     }
 }

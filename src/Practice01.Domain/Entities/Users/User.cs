@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace Practice01.Domain.Entities;
+namespace Practice01.Domain.Entities.Users;
 
 public class User :IdentityUser<Guid>, IBaseEntity
 {

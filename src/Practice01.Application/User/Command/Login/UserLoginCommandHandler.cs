@@ -8,12 +8,12 @@ namespace Practice01.Application.User.Command.Login;
 public class UserLoginCommandHandler : IRequestHandler<UserLoginCommand, TokenDto?>
 {
     private readonly ErrorCollector _errorCollector;
-    private readonly UserManager<Domain.Entities.User> _userManager;
+    private readonly UserManager<Domain.Entities.Users.User> _userManager;
     private readonly IJwtTokenService _jwtTokenService;
 
     public UserLoginCommandHandler(
         ErrorCollector errorCollector,
-        UserManager<Domain.Entities.User> userManager,
+        UserManager<Domain.Entities.Users.User> userManager,
         IJwtTokenService jwtTokenService)
     {
         _errorCollector = errorCollector;

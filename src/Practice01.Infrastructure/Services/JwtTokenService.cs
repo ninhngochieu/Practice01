@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Practice01.Application.Common.Token;
 using Practice01.Domain.Entities;
+using Practice01.Domain.Entities.Users;
 
 namespace Practice01.Infrastructure.Services;
 

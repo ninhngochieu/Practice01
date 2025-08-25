@@ -1,4 +1,4 @@
-namespace Practice01.Domain.Entities;
+namespace Practice01.Domain.Entities.WeatherForecasts;
 
 public class WeatherForecast
 {

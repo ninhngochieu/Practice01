@@ -2,7 +2,7 @@ using System.Data;
 using Npgsql;
 using Practice01.Application.Common.Data;
 
-namespace Practice01.Infrastructure.Data;
+namespace Practice01.Infrastructure.Data.Ef;
 
 public class SqlConnectionFactory : ISqlConnectionFactory, IDisposable, IAsyncDisposable
 {

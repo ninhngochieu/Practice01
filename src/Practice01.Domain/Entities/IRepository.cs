@@ -1,4 +1,4 @@
-namespace Practice01.Domain.Entities.Books;
+namespace Practice01.Domain.Entities;
 
 public interface IRepository<T>
 {

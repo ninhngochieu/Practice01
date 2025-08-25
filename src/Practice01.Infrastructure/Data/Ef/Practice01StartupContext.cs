@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Practice01.Domain.Entities;
+using Practice01.Domain.Entities.Roles;
+using Practice01.Domain.Entities.Users;
 
-namespace Practice01.Infrastructure.Data;
+namespace Practice01.Infrastructure.Data.Ef;
 
 public class Practice01StartupContext : IdentityDbContext<User, Role, Guid>
 {

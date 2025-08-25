@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Practice01.Application;
 using Practice01.Infrastructure;
 using Practice01.Infrastructure.Data;
+using Practice01.Infrastructure.Data.Ef;
 using Practice01.Presentation;
 using Practice01.Presentation.Middleware;
 using Serilog;

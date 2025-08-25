@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Practice01.Infrastructure.Data;
+using Practice01.Infrastructure.Data.Ef;
 
 #nullable disable
 

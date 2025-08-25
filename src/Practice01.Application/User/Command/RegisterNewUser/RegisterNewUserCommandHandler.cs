@@ -8,10 +8,10 @@ namespace Practice01.Application.User.Command.RegisterNewUser;
 public class RegisterNewUserCommandHandler
     : IRequestHandler<RegisterNewUserCommand, Guid?>
 {
-    private readonly UserManager<Domain.Entities.User> _userManager;
+    private readonly UserManager<Domain.Entities.Users.User> _userManager;
     private readonly ErrorCollector _errorCollector;
 
-    public RegisterNewUserCommandHandler(UserManager<Domain.Entities.User> userManager, ErrorCollector errorCollector)
+    public RegisterNewUserCommandHandler(UserManager<Domain.Entities.Users.User> userManager, ErrorCollector errorCollector)
     {
         _userManager = userManager;
         _errorCollector = errorCollector;
@@ -19,7 +19,7 @@ public class RegisterNewUserCommandHandler
 
     public async Task<Guid?> Handle(RegisterNewUserCommand request, CancellationToken cancellationToken)
     {
-        var user = new Domain.Entities.User
+        var user = new Domain.Entities.Users.User
         {
             UserName = request.UserName,
             Email = request.Email,
