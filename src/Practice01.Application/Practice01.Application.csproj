@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="TestApiKey\Queries\TestRedis\Get\" />
+    <Folder Include="TestFileService\Queries\" />
+    <Folder Include="TestRedis\Commands\" />
+    <Folder Include="TestRedis\Queries\" />
     <Folder Include="WeatherForecast\Commands\" />
   </ItemGroup>
 

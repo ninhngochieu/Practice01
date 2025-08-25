@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using Practice01.Application.Common.Cache;
 using Practice01.Application.Common.Data;
+using Practice01.Application.Common.File;
 using Practice01.Application.Common.Token;
 using Practice01.Application.Common.User;
 using Practice01.Domain.Entities;
@@ -72,7 +73,7 @@ public static class DependencyInjection
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IUserProvider, UserProvider>();
         
-        var mongoDbConnectionString = builderConfiguration.GetConnectionString("MongoDb");
+        var mongoDbConnectionString = builderConfiguration.GetConnectionString("MongoDbConnection");
         var mongoUrl = new MongoUrl(mongoDbConnectionString);
 
         services.AddSingleton<IMongoClient>(sp =>
@@ -88,5 +89,6 @@ public static class DependencyInjection
         });
         
         services.AddSingleton<IRedisCacheService, RedisCacheService>();
+        services.AddSingleton<IFileService, FileService>();
     }
 }
