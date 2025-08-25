@@ -7,6 +7,7 @@ services:
       - ConnectionStrings__Practice01StartupContextConnection=Host=host.docker.internal;Port=5432;Database=practice01;Username=dev;Password=dev
       - ConnectionStrings__RedisConnection=host.docker.internal:6379,abortConnect=false
       - ConnectionStrings__MongoDbConnection=mongodb://host.docker.internal:27017/practice01
+      - Kafka__BootstrapServers=host.docker.internal:9092
     ports:
       - "8080:8080"
 #      - "8081"
@@ -82,6 +83,10 @@ services:
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
       - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+      - "9094:9094"
         
   kafka-ui:
     image: provectuslabs/kafka-ui:latest

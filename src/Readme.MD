@@ -1,60 +1,79 @@
-- Chia kiến trúc làm 5 layer
-+ Startup layer: Nơi khởi chạy appp
-+ Presentation layer: trả về UI, Api Response
-+ Application layer: Xử lý logic business chính
-+ Domain layer: Các domain nghiệp vụ
-+ Infrastructure layer: Xử lý data, hệ thống kết nối bên ngoài
-- Lý do: Mỗi layer đảm nhận 1 công việc riêng như đảm nhận xử lý business, kết nối bên ngoài, trả về format dữ liệu....
+- Chọn kiến trúc: Clean Architecture với các layer Presentation, Application, Domain, Infrastructure
++ Các kiến trúc tương đương: Vertical Slice, Controller Service Repository
++ Lý do chọn: 
+  + Phân tách các nhiệm vụ rõ ràng giữa các layer. Presentation Layer trả dữ liệu, Application xử lý logic, Domain thể hiện nghiệp vụ, Infrastructure tích hợp giao tiếp các hệ thống bên ngoài
++ Bất lợi: 
+  + Phải tìm hiểu kĩ trước khi triển khai
+  + Đặt các thành phần phải phù hợp với các layer để không bị phình to
+  + Ban đầu sẽ phức tạp hơn với kiến trúc cổ điển như Controller Service Repository
 
-- Tại sao chọn mô hình Mediator, không chọn mô hình Controller Service Repository
-+ Che dấu logic thực sự của yêu cầu, chỉ cần quan tâm yêu cầu command, trả kết quả
-+ Đối với service, phải khai báo cụ thể hàm nào
-+ Mở rộng trong tương lai nếu
-  + Tách việc đọc ghi riêng
-  + Publish event
-+ Bất lợi của MediatR
-  + Thư viện trở thành commercial và community, phải mua license nếu doanh thu > 5tr đô
-  + Key Community có thời hạn 1 năm, mỗi năm phải sinh key mới. 
-    + Hiện tại mediatR kiểm soát không chặt chẽ, chỉ báo log khi sử dụng, chưa có vấn đề gì trong hiện tại
-    + Cần phải viết MediatR thủ công nếu bản quyền bị siết chặt
-+ Bất lợi của Service
-  + Business phình to, source code phình to, khó kiểm soát nếu tổ chức không tốt
+- Sử dụng MediatR
++ Công nghệ tương đường: Service
++ Lý do: 
+  + Che dấu việc triển khai cụ thể, bớt khai báo interface nhiều
+  + Phân chia Command / Query. Code gọn hơn vì tách riêng logic đọc và ghi. Sau này có thể triển khai mô hình DB read write
+  + Hỗ trợ publish nếu sau này cần triển khai mô hình event
+  + Service sẽ bị phình to logic quá phức tạp. Có thể giải quyết tách logic bằng Partial class
+  + Có Behaviour Pipeline, bóc tách 1 số logic như fluent validation, logging rất tiện
++ Bất lợi :
+  + MediatR không tái sử dụng được logic của nhau (Thực tế ít logic được sử dụng chung)
+  + Thư viện triển khai mô hình commercial license. Community Key phải gia hạn 1 năm. Hiện tại không sử dụng community key chỉ đang cảnh báo lỗi vì chưa siết chặt. Nếu siết chặt bản quyền cần phải tự viết
+  + Phải viết cấu trúc đơn giản, rõ ràng để biết code chạy ở đâu
 
-Log sử dụng Serilog
-- Cấu hình dễ sử dụng, hiện đại
-- Sink được nhiều bên: File, Console, hệ thống ghi log
-- Nhược điểm: Cấu hình bằng code chủ yếu, cũng có file ...
-- Chỉ log những thông tin quan trọng, không log thông tin dư thừa
-So sánh:
-- NLog. Log4Net hơi cũ
-- MS Logger ghi log đơn giản, ít tính năng
-- OpenTelemetry: Cần cấu hình
+- Log: Sử dụng Serilog
++ Các công nghệ tương đường: Ms Log, NLog, Log4net
++ Lý do: 
+  + Serilog tương đối hiện đại, cấu hình tinh chỉnh được nhiều
+  + Hỗ trợ sink qua nhiều nguồn: Server, File, Console, Database, ElasticSearch, etc
+  + MS log chỉ hỗ trợ cơ bản, không có cơ chế sink
+  + NLog, Log4net hơi cũ
++ Bất lợi:
+  + Phải biết cấu hình
+  + Bắt log nhiều tốn tài nguyên server
+
+- Database quan hệ: Postgres
++ Các công nghệ tương đường: MySQL, SQL Server, Oracle
++ Lý do:
+  + Postgres tương đối hiện đại, hiện tại đang là xu thế
+  + Postgres đọc ghi tốt
+  + Query plan chuẩn
+  + Hỗ trợ NoSQL (Có thể không cần thiết)
+  + MSSQL tốn chi phí bản quyền, chi phí bản quyền cần tính toán kĩ lưỡng, query plan không chuẩn, cùng 1 câu query, chạy SP nhanh hơn query raw (5-10 lần), engine chọn index không tốt
+  + Oracle chạy tốt trong hệ thống lớn, độ tin cậy cao, được dùng nhiều trong hệ thống ngân hàng, nhưng chi phí không hề rẻ
+  + MySQL phù hợp với hệ thống nhỏ, hạn chế 1 số tính năng tùy phiên bản
++ Bất lợi:
+  + Phải biết cấu hình, hiểu cơ chế
+  + Sử dụng kèm với các framework như entity framework phải xem xét kĩ, nếu không ef sinh câu query không tối ưu, chạy rất chậm
+  + Setup connection pool để chịu lỗi
+
+- NoSQL: Mongo
++ Các công nghệ tương đường: Azure Cosmos DB
++ Lý do:
+  + Đọc ghi nhanh
+  + Triết lý hạn chế join, nên lấy kết quả rất tốt
+  + Index chạy chuẩn, đánh nhiều index vẫn ok
+  + MongoDriver hỗ trợ tốt
+  + Có triển khai ACID nếu cần
+  + Lưu trữ được nhiều dữ liệu rất lớn. 1 tỷ record đánh index chuẩn chạy vẫn nhanh (Phải đánh index)
+  + Hỗ trợ 1 số tính năng mà NoSQL không có như: Inc, Dsc, TTL Index
+  + Khả năng chịu tải tốt hơn nhiều so với DB quan hệ
++ Bất lợi
+  + Làm report không tốt vì mongo dùng aggregate để join, khá phức tạp và chậm. Giải quyết bằng cách tiền xử lý dữ liệu
+  + Setup connection pool để chịu lỗi
+
+- Cache: Redis
++ Các công nghệ tương đường: Memcached
++ Lý do:
+  + Khả năng chịu tải cực tốt
+  + Có nhiều tính năng rất mạnh: Lock, inc, desc, pub sub, triển khai ratelimit
+  + Quản lý, thao tác cache được
+  + Tốc độ đọc ghi rất nhanh vì lưu trên ram
+  + Các instance truy cập vào redis cache dễ dàng
+  + ImmemoryCache chỉ lưu trong ram của instance, mất dữ liệu
++ Bất lợi
+  + Cần cơ chế validate cache chính xác
+  + Cần cơ chế sync data giữa cache và datasource để không sai lệch dữ liệu
+  + Không cache giá trị quá lớn (< 5mb)
+  + Chỉ cache các giá trị thường xuyên lặp đi lặp lại để hạn chế query xuống DB
 
 
-Database Quan hệ
-- Postgres vì read ổn, query plan chuẩn
-  + Hiệu suất ok
-  + Postgres đã tính hợp sẵn cấu hình pool trong connection string, max pool size mặc định = 100
-- Không chọn SQL Server
-  + Tốn chi phí license
-  + Tốc độ truy vấn raw và truy vấn store quá khác biệt
-  + Engine chạy index không tối ưu
-  + Chỉ phù hợp với hệ thống trung bình trở xuống
-
-NoSQL 
-- MongoDB
-  + NoSQL phổ biến, tài liệu đẩy đủ, cộng đồng lớn
-  + Read Write tốt, chịu tải cao hơn DB quan hệ
-  + Triết lý hạn chế join, nên tốc độ rất tốt
-  + Nhược điểm: Không hỗ trợ join tốt, phải dùng aggregate. Không phù hợp với báo cáo
-
-- Kết hợp NoSql và DB quan hệ: Mongo cho khả năng đọc tốt, Postgres DB quan hệ đảm bảo độ tin cậy và transaction tốt
-+ Cần cơ chế Streaming data để sync 2 NoSQL và DB
-
-Cache: Redis
-- Không sử dụng ImmemoryCache, vì ram của ứng dụng hạn chế, cache sẽ bị xóa nếu restart server. Không thể quản lý trực tiếp như thêm xóa, không thể chia sẻ data cho các service khác
-- Redis không chỉ là cache. Có 1 số cơ chế rất hay: lock, inc, pub sub
-- Tốc độ nhanh, Khả năng chịu tải của nó rất tốt
-- Cần cơ chế validate cache chính xác để data đảm bảo đúng
-- Không sử dụng DB làm cache, vì tăng tải lên DB
-- ConnectionMultiplexer singleton lifecycle đã tái sử dụng, threadsafe

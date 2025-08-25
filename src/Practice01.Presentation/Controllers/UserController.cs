@@ -57,7 +57,7 @@ public class UserController
     /// 
     /// </summary>
     /// <returns></returns>
-    [HttpPost("Me")]
+    [HttpGet("Me")]
     [MapToApiVersion("1.0")]
     public async Task<IResult> GetUserInfo()
     {

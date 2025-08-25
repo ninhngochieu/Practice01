@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using HealthChecks.UI.Client;
+using KafkaFlow;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Practice01.Application;
@@ -101,16 +102,10 @@ app.MapHealthChecks("/health", new HealthCheckOptions
 //     .AllowAnonymous()
 //     ;
 
-app.Use(async (context, next) =>
-{
-    context.Response.OnStarting(() =>
-    {
-        context.Response.Headers["RateLimit-Limit"] = "100";
-        context.Response.Headers["RateLimit-Remaining"] = "95";
-        context.Response.Headers["RateLimit-Reset"] = DateTimeOffset.UtcNow.AddSeconds(60).ToUnixTimeSeconds().ToString();
-        return Task.CompletedTask;
-    });
-    await next();
-});
+
+var kafkaBus = app.Services.CreateKafkaBus();
+await kafkaBus.StartAsync();
+
+await app.RunAsync();
 
 app.Run();

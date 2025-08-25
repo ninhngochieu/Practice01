@@ -1,6 +1,10 @@
 using System.Net;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Polly;
+using Polly.Wrap;
+using Practice01.Application.Common.Data;
 using Practice01.Application.Common.Validation;
 
 namespace Practice01.Application.User.Command.RegisterNewUser;
@@ -10,11 +14,18 @@ public class RegisterNewUserCommandHandler
 {
     private readonly UserManager<Domain.Entities.Users.User> _userManager;
     private readonly ErrorCollector _errorCollector;
+    private readonly AsyncPolicyWrap _resiliencePolicy;
 
-    public RegisterNewUserCommandHandler(UserManager<Domain.Entities.Users.User> userManager, ErrorCollector errorCollector)
+    public RegisterNewUserCommandHandler(UserManager<Domain.Entities.Users.User> userManager,
+        ErrorCollector errorCollector,
+        [FromKeyedServices("PostgresResiliencePolicy")] IResiliencePolicy resiliencePolicy)
     {
         _userManager = userManager;
         _errorCollector = errorCollector;
+        _resiliencePolicy = Policy.WrapAsync(
+            resiliencePolicy.CreateRetryPolicy(),
+            resiliencePolicy.CreateCircuitBreakerPolicy()
+        );
     }
 
     public async Task<Guid?> Handle(RegisterNewUserCommand request, CancellationToken cancellationToken)
@@ -29,7 +40,7 @@ public class RegisterNewUserCommandHandler
             IsActive = true
         };
 
-        var result = await _userManager.CreateAsync(user, request.Password);
+        var result = await _resiliencePolicy.ExecuteAsync(async () => await _userManager.CreateAsync(user, request.Password));
 
         if (!result.Succeeded)
         {
@@ -51,7 +62,8 @@ public class RegisterNewUserCommandHandler
 
         try
         {
-            var roleResult = await _userManager.AddToRoleAsync(user, "MEMBER");
+            // var roleResult = await _userManager.AddToRoleAsync(user, "MEMBER");
+            await _resiliencePolicy.ExecuteAsync(async () => await _userManager.AddToRoleAsync(user, "MEMBER"));
         }
         catch (Exception e)
         {

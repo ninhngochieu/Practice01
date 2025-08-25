@@ -1,3 +1,5 @@
+using KafkaFlow;
+using KafkaFlow.Serializer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -11,11 +13,15 @@ using Practice01.Application.Common.User;
 using Practice01.Domain.Entities;
 using Practice01.Domain.Entities.Books;
 using Practice01.Domain.Entities.Users;
+using Practice01.Infrastructure.Consumers;
 using Practice01.Infrastructure.Data;
 using Practice01.Infrastructure.Data.Ef;
+using Practice01.Infrastructure.Data.MongoDb;
 using Practice01.Infrastructure.Data.MongoDb.Books;
+using Practice01.Infrastructure.Data.Redis;
 using Practice01.Infrastructure.Provider;
 using Practice01.Infrastructure.Services;
+using Practice01.Infrastructure.Workers;
 using StackExchange.Redis;
 using Role = Practice01.Domain.Entities.Roles.Role;
 
@@ -26,8 +32,8 @@ public static class DependencyInjection
     public static void AddInfrastructure(this IServiceCollection services, ConfigurationManager builderConfiguration)
     {
         var pgConnectionString = builderConfiguration.GetConnectionString("Practice01StartupContextConnection") ??
-                               throw new InvalidOperationException(
-                                   "Connection string 'Practice01StartupContextConnection' not found.");
+                                 throw new InvalidOperationException(
+                                     "Connection string 'Practice01StartupContextConnection' not found.");
 
         services.AddDbContext<Practice01StartupContext>(options =>
         {
@@ -54,13 +60,12 @@ public static class DependencyInjection
 
                 // User
                 options.User.RequireUniqueEmail = true;
-
             }).AddEntityFrameworkStores<Practice01StartupContext>()
             .AddDefaultTokenProviders();
 
         var redisConnectionString = builderConfiguration.GetConnectionString("RedisConnection") ??
-                               throw new InvalidOperationException(
-                                   "Connection string 'RedisConnection' not found.");
+                                    throw new InvalidOperationException(
+                                        "Connection string 'RedisConnection' not found.");
         services.AddSingleton<IConnectionMultiplexer>(sp =>
         {
             var configuration = ConfigurationOptions.Parse(redisConnectionString, true);
@@ -74,7 +79,7 @@ public static class DependencyInjection
 
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IUserProvider, UserProvider>();
-        
+
         var mongoDbConnectionString = builderConfiguration.GetConnectionString("MongoDbConnection");
         var mongoUrl = new MongoUrl(mongoDbConnectionString);
         var settings = MongoClientSettings.FromUrl(mongoUrl);
@@ -99,10 +104,42 @@ public static class DependencyInjection
             var database = mongoClient.GetDatabase(mongoUrl.DatabaseName);
             return database;
         });
-        
+
         services.AddSingleton<IRedisCacheService, RedisCacheService>();
         services.AddSingleton<IFileService, FileService>();
         services.AddSingleton<IBookRepository, BookRepository>();
-        services.AddSingleton<IResiliencePolicy, IResiliencePolicy>();
+        services.AddKeyedSingleton<IResiliencePolicy, MongoResiliencePolicy>("MongoResiliencePolicy");
+        services.AddKeyedSingleton<IResiliencePolicy, PostgresResiliencePolicy>("PostgresResiliencePolicy");
+        services.AddKeyedSingleton<IResiliencePolicy, RedisResiliencePolicy>("RedisResiliencePolicy");
+
+        var kafkaBootstrapServers = builderConfiguration["Kafka:BootstrapServers"] ??
+                                    throw new InvalidOperationException("Kafka:BootstrapServers not found.");
+        const string producerName = "PrintConsole";
+        const string topicName = "sample-topic";
+        services.AddKafka(kafka => kafka
+            .UseConsoleLog()
+            .AddCluster(cluster => cluster
+                .WithBrokers([kafkaBootstrapServers])
+                .CreateTopicIfNotExists(topicName, 6, 1)
+                .AddProducer(
+                    producerName,
+                    producer => producer
+                        .DefaultTopic(topicName)
+                        .AddMiddlewares(m => m.AddSerializer<NewtonsoftJsonSerializer>())
+                )
+                .AddConsumer(consumer => consumer
+                    .Topic(topicName)
+                    .WithGroupId("print-console-handler")
+                    .WithBufferSize(100)
+                    .WithWorkersCount(3)
+                    .AddMiddlewares(middlewares => middlewares
+                        .AddDeserializer<NewtonsoftJsonDeserializer>()
+                        .AddTypedHandlers(h => h.AddHandler<PrintConsoleHandler>())
+                    )
+                )
+            )
+        );
+        
+        services.AddHostedService<PrintConsoleWorker>();
     }
 }
