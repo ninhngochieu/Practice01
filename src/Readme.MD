@@ -77,3 +77,12 @@
   + Chỉ cache các giá trị thường xuyên lặp đi lặp lại để hạn chế query xuống DB
 
 
+- Cách sử dụng và tối ưu trong quá trình áp dụng
+  + Ioc: Đăng kí các service của mongodb và redis dưới dạng singleton. Tạo 1 lần, không cần phải tạo lại sau mỗi lần request
+  + Cấu hình Connection Pool cho Postgres, Redis, MongoDB để phục vụ traffic lớn
+
+- Cover lỗi có thể xảy ra:
+  + Lỗi hệ thống, validation: Trả về format chuẩn kèm cụ thể lý do tại sao lỗi. Kèm traceId và requestId
+  + Triển khai retry và circuit breaker khi thao tác với tài nguyên bên ngoài
+    + Tiến hành thử lại sau 1 khoảng thời gian nhất định
+    + Ngăn chặn spam tài nguyên ngoài để tài nguyên phục hồi
