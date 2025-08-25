@@ -21,8 +21,7 @@ namespace Practice01.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
+c
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
