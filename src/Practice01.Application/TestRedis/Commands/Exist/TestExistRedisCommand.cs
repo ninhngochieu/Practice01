@@ -1,4 +1,4 @@
-namespace Practice01.Application.TestApiKey.Queries.TestRedis.Exist;
+namespace Practice01.Application.TestRedis.Commands.Exist;
 
 public class TestExistRedisCommand
 {

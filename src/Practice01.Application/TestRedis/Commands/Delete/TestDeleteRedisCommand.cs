@@ -3,7 +3,7 @@ using MediatR;
 using Practice01.Application.Common.Cache;
 using Practice01.Application.Common.Validation;
 
-namespace Practice01.Application.TestApiKey.Queries.TestRedis.Delete;
+namespace Practice01.Application.TestRedis.Commands.Delete;
 
 public class TestDeleteRedisCommand : IRequest
 {

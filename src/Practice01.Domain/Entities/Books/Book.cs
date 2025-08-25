@@ -17,4 +17,35 @@ public class Book : IBaseEntity
     public Guid? CreatedBy { get; set; }
     public Guid? LastModifiedBy { get; set; }
     public Guid? DeletedBy { get; set; }
+
+    public static Book Create(string requestBookName, decimal requestPrice, string requestCategory, string requestAuthor)
+    {
+        return new Book
+        {
+            BookName = requestBookName,
+            Price = requestPrice,
+            Category = requestCategory,
+            Author = requestAuthor
+        };
+    }
+
+    public static Book Create(Guid requestId ,string requestBookName, decimal requestPrice, string requestCategory, string requestAuthor)
+    {
+        return new Book
+        {
+            Id = requestId,
+            BookName = requestBookName,
+            Price = requestPrice,
+            Category = requestCategory,
+            Author = requestAuthor
+        };
+    }
+
+    public void Update(string requestBookName, decimal requestPrice, string requestCategory, string requestAuthor)
+    {
+        BookName = requestBookName;
+        Price = requestPrice;
+        Category = requestCategory;
+        Author = requestAuthor;
+    }
 }

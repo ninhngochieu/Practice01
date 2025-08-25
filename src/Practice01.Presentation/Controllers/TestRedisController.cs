@@ -2,9 +2,10 @@ using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Practice01.Application.TestApiKey.Queries.TestRedis.Delete;
-using Practice01.Application.TestApiKey.Queries.TestRedis.Get;
-using Practice01.Application.TestApiKey.Queries.TestRedis.Set;
+using Practice01.Application.TestRedis.Commands.Delete;
+using Practice01.Application.TestRedis.Commands.Set;
+using Practice01.Application.TestRedis.Commands.Update;
+using Practice01.Application.TestRedis.Queries.Get;
 using Practice01.Presentation.Common.ObjectResult;
 
 namespace Practice01.Presentation.Controllers;

@@ -35,7 +35,7 @@ public static class DependencyInjection
             // Định nghĩa ApiKey scheme
             c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
             {
-                Description = "Nhập API Key vào ô bên dưới. Header: X-API-KEY",
+                Description = "Nhập API Key vào ô bên dưới. Header: X-API-KEY. Ex: 12345-ABCDE",
                 Name = "X-API-KEY",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,
@@ -45,7 +45,7 @@ public static class DependencyInjection
             // Bearer JWT Scheme
             c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
             {
-                Description = "Nhập JWT token vào đây (ví dụ: Bearer eyJhbGci...)",
+                Description = "Nhập JWT token vào đây (ví dụ: eyJhbGci...)",
                 Name = "Authorization",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.Http,

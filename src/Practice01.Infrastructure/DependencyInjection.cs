@@ -9,9 +9,11 @@ using Practice01.Application.Common.File;
 using Practice01.Application.Common.Token;
 using Practice01.Application.Common.User;
 using Practice01.Domain.Entities;
+using Practice01.Domain.Entities.Books;
 using Practice01.Domain.Entities.Users;
 using Practice01.Infrastructure.Data;
 using Practice01.Infrastructure.Data.Ef;
+using Practice01.Infrastructure.Data.MongoDb.Books;
 using Practice01.Infrastructure.Provider;
 using Practice01.Infrastructure.Services;
 using StackExchange.Redis;
@@ -75,10 +77,20 @@ public static class DependencyInjection
         
         var mongoDbConnectionString = builderConfiguration.GetConnectionString("MongoDbConnection");
         var mongoUrl = new MongoUrl(mongoDbConnectionString);
+        var settings = MongoClientSettings.FromUrl(mongoUrl);
+        settings.MaxConnectionPoolSize = 200;
+        settings.MinConnectionPoolSize = 20;
+        settings.ConnectTimeout = TimeSpan.FromSeconds(5);
+        settings.SocketTimeout = TimeSpan.FromSeconds(30);
+        settings.HeartbeatInterval = TimeSpan.FromSeconds(10);
+        settings.RetryWrites = true;
+        settings.RetryReads = true;
+        settings.HeartbeatTimeout = TimeSpan.FromSeconds(10);
+        settings.WaitQueueTimeout = TimeSpan.FromSeconds(2);
 
         services.AddSingleton<IMongoClient>(sp =>
         {
-            var mongoClient = new MongoClient(mongoUrl);
+            var mongoClient = new MongoClient(settings);
             return mongoClient;
         });
         services.AddSingleton<IMongoDatabase>(sp =>
@@ -90,5 +102,7 @@ public static class DependencyInjection
         
         services.AddSingleton<IRedisCacheService, RedisCacheService>();
         services.AddSingleton<IFileService, FileService>();
+        services.AddSingleton<IBookRepository, BookRepository>();
+        services.AddSingleton<IResiliencePolicy, IResiliencePolicy>();
     }
 }

@@ -3,7 +3,7 @@ using MediatR;
 using Practice01.Application.Common.File;
 using Practice01.Application.Common.Validation;
 
-namespace Practice01.Application.TestFileService.Queries.Excel;
+namespace Practice01.Application.TestFileService.Queries.Json;
 
 public class TestGetJsonFileQuery : IRequest<Stream>
 {

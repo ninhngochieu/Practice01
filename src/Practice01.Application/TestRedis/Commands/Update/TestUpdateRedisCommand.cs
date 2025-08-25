@@ -3,7 +3,7 @@ using MediatR;
 using Practice01.Application.Common.Cache;
 using Practice01.Application.Common.Validation;
 
-namespace Practice01.Application.TestApiKey.Queries.TestRedis.Set;
+namespace Practice01.Application.TestRedis.Commands.Update;
 
 public class TestUpdateRedisCommand : IRequest
 {

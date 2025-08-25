@@ -3,7 +3,7 @@ using MediatR;
 using Practice01.Application.Common.File;
 using Practice01.Application.Common.Validation;
 
-namespace Practice01.Application.TestFileService.Queries;
+namespace Practice01.Application.TestFileService.Commands.Excel;
 
 public class TestWriteExcelFileCommand : IRequest<string>
 {
