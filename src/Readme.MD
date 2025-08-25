@@ -80,6 +80,8 @@
 - Cách sử dụng và tối ưu trong quá trình áp dụng
   + Ioc: Đăng kí các service của mongodb và redis dưới dạng singleton. Tạo 1 lần, không cần phải tạo lại sau mỗi lần request
   + Cấu hình Connection Pool cho Postgres, Redis, MongoDB để phục vụ traffic lớn
+  + Triển khai ratelimit
+
 
 - Cover lỗi có thể xảy ra:
   + Lỗi hệ thống, validation: Trả về format chuẩn kèm cụ thể lý do tại sao lỗi. Kèm traceId và requestId
