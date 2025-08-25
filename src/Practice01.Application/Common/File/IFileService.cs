@@ -7,4 +7,7 @@ public interface IFileService
 {
     Task WriteExcelAsync<T>(string fileName, IEnumerable<T> data, string sheetName = "Sheet1");
     Task WriteJsonAsync<T>(string fileName, IEnumerable<T> data);
+    
+    Task<Stream> ReadExcelAsync(string fileName);
+    Task<Stream> ReadJsonAsync(string fileName);
 }

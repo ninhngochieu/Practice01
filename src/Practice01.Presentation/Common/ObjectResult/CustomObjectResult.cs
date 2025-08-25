@@ -53,4 +53,9 @@ public class CustomObjectResult
 
         return Results.Json(apiResponse, statusCode: _errorCollector.StatusCode);
     }
+
+    public IResult ReturnFile(Stream stream, string contentType, string fileName)
+    {
+        return Results.File(stream, contentType, fileName);
+    }
 }

@@ -28,7 +28,7 @@ public class FileService : IFileService
             ws.Cells["A1"].LoadFromCollection(data, true);
 
             // Tự động điều chỉnh cột
-            ws.Cells.AutoFitColumns();
+            //ws.Cells.AutoFitColumns();
 
             package.Save();
         });
@@ -36,7 +36,30 @@ public class FileService : IFileService
 
     public Task WriteJsonAsync<T>(string fileName, IEnumerable<T> data)
     {
+        var fileInfo = new FileInfo(fileName);
+        fileInfo.Directory?.Create(); // Tạo folder nếu chưa có
+        
         var json = JsonSerializer.Serialize(data);
         return File.WriteAllTextAsync(fileName, json);
+    }
+
+    public Task<Stream> ReadExcelAsync(string fileName)
+    {
+        var fileInfo = new FileInfo(fileName);
+        if (!fileInfo.Exists)
+        {
+            return Task.FromResult<Stream>(Stream.Null);
+        }
+        return Task.FromResult<Stream>(File.OpenRead(fileInfo.FullName));
+    }
+
+    public Task<Stream> ReadJsonAsync(string fileName)
+    {
+        var fileInfo = new FileInfo(fileName);
+        if (!fileInfo.Exists)
+        {
+            return Task.FromResult<Stream>(Stream.Null);
+        }
+        return Task.FromResult<Stream>(File.OpenRead(fileInfo.FullName));
     }
 }
