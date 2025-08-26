@@ -1,8 +1,8 @@
-using System.Runtime.Serialization;
 using KafkaFlow;
 using Microsoft.Extensions.Logging;
+using Practice01.Application.Common.Producers;
 
-namespace Practice01.Infrastructure.Consumers;
+namespace Practice01.Infrastructure.Kafkaflow.Consumers;
 
 public class PrintConsoleHandler : IMessageHandler<TestMessage>
 {
@@ -22,11 +22,4 @@ public class PrintConsoleHandler : IMessageHandler<TestMessage>
 
         return Task.CompletedTask;
     }
-}
-
-[DataContract]
-public class TestMessage
-{
-    [DataMember(Order = 1)]
-    public string Text { get; set; }
 }

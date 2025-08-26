@@ -2,7 +2,7 @@ using KafkaFlow;
 using KafkaFlow.Producers;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Practice01.Infrastructure.Consumers;
+using Practice01.Application.Common.Producers;
 
 namespace Practice01.Infrastructure.Workers;
 
