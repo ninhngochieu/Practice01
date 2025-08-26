@@ -14,7 +14,7 @@ public class SqlConnectionFactory : ISqlConnectionFactory, IDisposable, IAsyncDi
         _connectionString = connectionString;
     }
 
-    public IDbConnection CreateConnection()
+    public IDbConnection GetConnection()
     {
         if (_connection is not null && _connection.State != ConnectionState.Closed)
         {
