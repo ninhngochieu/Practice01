@@ -1,3 +1,4 @@
+using Elastic.Clients.Elasticsearch;
 using KafkaFlow;
 using KafkaFlow.Serializer;
 using Microsoft.AspNetCore.Identity;
@@ -147,5 +148,12 @@ public static class DependencyInjection
         services.AddSingleton<ITestMessageProducer, TestMessageProducer>();
         services.AddHostedService<SerilogToKafkaLogWorker>();
         services.AddHostedService<KafkaSerilogToElasticSearchWorker>();
+        services.AddSingleton<ElasticsearchClient>(sp =>
+        {
+            var elasticSettings =
+                new ElasticsearchClientSettings(new Uri(builderConfiguration["Elasticsearch:Url"] ??
+                                                        throw new InvalidOperationException()));
+            return new ElasticsearchClient(elasticSettings);
+        });
     }
 }

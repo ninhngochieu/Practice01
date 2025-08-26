@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.2" />
+    <PackageReference Include="Elastic.Clients.Elasticsearch" Version="9.1.5" />
     <PackageReference Include="EPPlus" Version="4.5.3.3" />
     <PackageReference Include="KafkaFlow" Version="3.1.0" />
     <PackageReference Include="KafkaFlow.Admin.Dashboard" Version="3.1.0" />
