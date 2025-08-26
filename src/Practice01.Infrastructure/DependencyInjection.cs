@@ -8,7 +8,6 @@ using MongoDB.Driver;
 using Practice01.Application.Common.Cache;
 using Practice01.Application.Common.Data;
 using Practice01.Application.Common.File;
-using Practice01.Application.Common.Log;
 using Practice01.Application.Common.Producers;
 using Practice01.Application.Common.Token;
 using Practice01.Application.Common.User;
@@ -149,7 +148,6 @@ public static class DependencyInjection
             TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
         services.AddSingleton<Practice01.Application.Common.Datetime.IDateTimeProvider,VietnameDateTimeProvider>();
         services.AddSingleton<ITestMessageProducer, TestMessageProducer>();
-        services.AddSingleton<ISerilogKafkaLogger, SerilogKafkaLogger>();
         services.AddHostedService<SerilogToKafkaLogWorker>();
     }
 }
