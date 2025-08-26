@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Practice01.Application.Common.Log;
 
 namespace Practice01.Infrastructure.Workers;
 
