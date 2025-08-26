@@ -8,9 +8,11 @@ using Practice01.Application;
 using Practice01.Infrastructure;
 using Practice01.Infrastructure.Data;
 using Practice01.Infrastructure.Data.Ef;
+using Practice01.Infrastructure.Logger;
 using Practice01.Presentation;
 using Practice01.Presentation.Middleware;
 using Serilog;
+using Serilog.Formatting.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +35,10 @@ Log.Logger = new LoggerConfiguration()
         outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj} " +
                         "RequestId={RequestId} TraceId={TraceId}{NewLine}{Exception}"
     )
+    .WriteTo.Kafka(
+        bootstrapServers: "kafka:9092",
+        topic: "logs.app",
+        formatter: new JsonFormatter(renderMessage: true))
     .CreateLogger();
 builder.Host.UseSerilog();
 
