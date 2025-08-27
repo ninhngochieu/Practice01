@@ -7,6 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Polly;
 using Practice01.Application.Common.Cache;
 using Practice01.Application.Common.Data;
@@ -199,6 +202,29 @@ public static class DependencyInjection
                     Log.Warning("Circuit half-opened, testing requests");
                     return ValueTask.CompletedTask;
                 };
+            });
+        
+        var resourceBuilder = ResourceBuilder.CreateDefault()
+            .AddService(serviceName: "Practice01", serviceVersion: "1.0.0");
+        services.AddOpenTelemetry()
+            .ConfigureResource(r => r.AddService("MyService"))
+            .WithTracing(tracing =>
+            {
+                tracing
+                    .SetResourceBuilder(resourceBuilder)
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddSource("Practice01.Presentation") 
+                    .AddOtlpExporter(); // gửi trace qua OTLP
+            })
+            .WithMetrics(metrics =>
+            {
+                metrics
+                    .SetResourceBuilder(resourceBuilder)
+                    .AddAspNetCoreInstrumentation()
+                    .AddHttpClientInstrumentation()
+                    .AddMeter("Practice01.Presentation")
+                    .AddOtlpExporter(); // gửi metric qua OTLP
             });
     }
 }
