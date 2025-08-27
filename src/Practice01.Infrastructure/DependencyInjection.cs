@@ -215,7 +215,11 @@ public static class DependencyInjection
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddSource("Practice01.Presentation") 
-                    .AddOtlpExporter(); // gửi trace qua OTLP
+                    .AddOtlpExporter(options =>
+                    {
+                        options.Endpoint = new Uri("http://otel-collector:4317");
+                    });
+                // gửi trace qua OTLP
             })
             .WithMetrics(metrics =>
             {
@@ -224,7 +228,10 @@ public static class DependencyInjection
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddMeter("Practice01.Presentation")
-                    .AddOtlpExporter(); // gửi metric qua OTLP
+                    .AddOtlpExporter(options =>
+                    {
+                        options.Endpoint = new Uri("http://otel-collector:4317");
+                    });
             });
     }
 }
