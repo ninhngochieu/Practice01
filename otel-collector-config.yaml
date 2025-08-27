@@ -6,11 +6,11 @@ receivers:
 
 exporters:
   debug:
-    verbosity: detailed   # replaces logging
+    verbosity: detailed   # thay logging
   prometheus:
     endpoint: "0.0.0.0:9464"
-  jaeger:
-    endpoint: "jaeger:14250"
+  otlp/jaeger:
+    endpoint: "jaeger:4317"   # Jaeger OTLP gRPC port
     tls:
       insecure: true
 
@@ -18,7 +18,7 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [debug, jaeger]
+      exporters: [debug, otlp/jaeger]
 
     metrics:
       receivers: [otlp]
