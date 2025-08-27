@@ -5,8 +5,8 @@ receivers:
       http:
 
 exporters:
-  logging:
-    loglevel: debug
+  debug:
+    verbosity: detailed   # replaces logging
   prometheus:
     endpoint: "0.0.0.0:9464"
   jaeger:
@@ -18,8 +18,8 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [logging, jaeger]
+      exporters: [debug, jaeger]
 
     metrics:
       receivers: [otlp]
-      exporters: [logging, prometheus]
+      exporters: [debug, prometheus]

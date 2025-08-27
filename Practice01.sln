@@ -24,8 +24,8 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
-		otel-collector-config.yml = otel-collector-config.yml
 		prometheus.yml = prometheus.yml
+		otel-collector-config.yaml = otel-collector-config.yaml
 	EndProjectSection
 EndProject
 Global
