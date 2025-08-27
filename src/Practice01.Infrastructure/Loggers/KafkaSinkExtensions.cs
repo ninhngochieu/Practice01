@@ -4,7 +4,7 @@ using Serilog.Configuration;
 using Serilog.Formatting;
 using Serilog.Formatting.Json;
 
-namespace Practice01.Infrastructure.Logger;
+namespace Practice01.Infrastructure.Loggers;
 
 public static class KafkaSinkExtensions
 {

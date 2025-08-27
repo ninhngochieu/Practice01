@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using Polly;
 using Practice01.Application.Common.Cache;
 using Practice01.Application.Common.Data;
 using Practice01.Application.Common.File;
@@ -23,6 +25,8 @@ using Practice01.Infrastructure.Kafkaflow.Producers;
 using Practice01.Infrastructure.Provider;
 using Practice01.Infrastructure.Services;
 using Practice01.Infrastructure.Workers;
+using Serilog;
+using Serilog.Core;
 using StackExchange.Redis;
 using Role = Practice01.Domain.Entities.Roles.Role;
 
@@ -140,11 +144,11 @@ public static class DependencyInjection
                 )
             )
         );
-        
+
         // services.AddHostedService<PrintConsoleWorker>();
         services.AddKeyedSingleton("VietnamTimeZoneInfo",
             TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
-        services.AddSingleton<Practice01.Application.Common.Datetime.IDateTimeProvider,VietnameDateTimeProvider>();
+        services.AddSingleton<Practice01.Application.Common.Datetime.IDateTimeProvider, VietnameDateTimeProvider>();
         services.AddSingleton<ITestMessageProducer, TestMessageProducer>();
         services.AddHostedService<SerilogToKafkaLogWorker>();
         services.AddHostedService<KafkaSerilogToElasticSearchWorker>();
@@ -155,5 +159,46 @@ public static class DependencyInjection
                                                         throw new InvalidOperationException()));
             return new ElasticsearchClient(elasticSettings);
         });
+        services.AddHttpClient("TestApi",
+                client => { client.BaseAddress = new Uri("https://jsonplaceholder.typicode.com"); })
+            .AddStandardResilienceHandler(options =>
+            {
+                options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(10);
+
+                // Retry
+                options.Retry.MaxRetryAttempts = 3;
+                options.Retry.BackoffType = DelayBackoffType.Constant;
+                options.Retry.Delay = TimeSpan.FromMilliseconds(500);
+                options.Retry.UseJitter = false;
+                options.Retry.OnRetry = args =>
+                {
+                    Log.Warning("Retry {Attempt}: {Reason}",
+                        args.AttemptNumber,
+                        args.Outcome.Exception?.Message ?? "unknown");
+                    return ValueTask.CompletedTask;
+                };
+
+                // Circuit Breaker
+                options.CircuitBreaker.FailureRatio = 0.8;
+                options.CircuitBreaker.MinimumThroughput = 5;
+                options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(30);
+                options.CircuitBreaker.BreakDuration = TimeSpan.FromSeconds(10);
+
+                options.CircuitBreaker.OnOpened = args =>
+                {
+                    Log.Error("Circuit opened due to failures");
+                    return ValueTask.CompletedTask;
+                };
+                options.CircuitBreaker.OnClosed = args =>
+                {
+                    Log.Information("Circuit closed, normal operation resumed");
+                    return ValueTask.CompletedTask;
+                };
+                options.CircuitBreaker.OnHalfOpened = args =>
+                {
+                    Log.Warning("Circuit half-opened, testing requests");
+                    return ValueTask.CompletedTask;
+                };
+            });
     }
 }

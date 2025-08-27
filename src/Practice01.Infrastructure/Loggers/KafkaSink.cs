@@ -3,7 +3,7 @@ using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting;
 
-namespace Practice01.Infrastructure.Logger;
+namespace Practice01.Infrastructure.Loggers;
 
 public class KafkaSink : ILogEventSink
 {
