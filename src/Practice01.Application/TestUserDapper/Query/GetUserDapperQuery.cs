@@ -20,26 +20,26 @@ public class GetUserDapperQueryHandler : IRequestHandler<GetUserDapperQuery, Lis
     public async Task<List<UserDto>> Handle(GetUserDapperQuery request, CancellationToken cancellationToken)
     {
         var sqlBuilder = new SqlBuilder();
-        var template = sqlBuilder.AddTemplate("public.\"AspNetUsers\" /**where**/");
+        var template = sqlBuilder.AddTemplate("dbo.AspNetUsers /**where**/");
         
-        sqlBuilder.Where("\"IsActive\"", true);
+        sqlBuilder.Where("IsActive = @IsActive", new { IsActive = true});
         var sqlQuery =
             $@"SELECT 
-                    ""Id"", 
-                    ""FirstName"", 
-                    ""LastName"", 
-                    ""DateOfBirth"", 
-                    ""IsActive"", 
-                    ""UserName"", 
-                    ""NormalizedUserName"", 
-                    ""Email"", 
-                    ""NormalizedEmail"",
-                    ""PhoneNumber"" 
+                    Id, 
+                    FirstName, 
+                    LastName, 
+                    DateOfBirth, 
+                    IsActive, 
+                    UserName, 
+                    NormalizedUserName, 
+                    Email, 
+                    NormalizedEmail,
+                    PhoneNumber 
             From {template.RawSql}
             ";
         
         var connection = _sqlConnectionFactory.GetConnection();
-        var users = (await connection.QueryAsync<UserDto>(sqlQuery)).AsList();
+        var users = (await connection.QueryAsync<UserDto>(sqlQuery, template.Parameters)).AsList();
 
         return users;
     }
