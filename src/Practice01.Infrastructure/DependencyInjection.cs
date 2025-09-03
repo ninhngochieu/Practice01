@@ -45,12 +45,9 @@ public static class DependencyInjection
 
         services.AddDbContext<Practice01StartupContext>(options =>
         {
-            options.UseNpgsql(pgConnectionString, builder =>
+            options.UseSqlServer(pgConnectionString, builder =>
             {
-                builder.EnableRetryOnFailure(
-                    maxRetryCount: 5,
-                    maxRetryDelay: TimeSpan.FromSeconds(10),
-                    errorCodesToAdd: null);
+                builder.EnableRetryOnFailure(5,TimeSpan.FromSeconds(10), null);
             });
         });
         services.AddScoped<ISqlConnectionFactory>(sp => new SqlConnectionFactory(pgConnectionString));

@@ -4,7 +4,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=8080
 #      - ASPNETCORE_HTTPS_PORTS=8081
-      - ConnectionStrings__Practice01StartupContextConnection=DataSource=host.docker.internal,1433;InitialCatalog=master;User ID=sa;Password=Passw0d1@;ConnectTimeout=30;Encrypt=True;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
+      - ConnectionStrings__Practice01StartupContextConnection=Server=host.docker.internal,1433;Database=master;User ID=sa;Password=Passw0d1@;Encrypt=True;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False
       - ConnectionStrings__RedisConnection=host.docker.internal:6379,abortConnect=false
       - ConnectionStrings__MongoDbConnection=mongodb://host.docker.internal:27017/practice01
       - Kafka__BootstrapServers=host.docker.internal:9092

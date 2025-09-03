@@ -1,13 +1,13 @@
 using System.Data;
-using Npgsql;
+using Microsoft.Data.SqlClient;
 using Practice01.Application.Common.Data;
 
 namespace Practice01.Infrastructure.Data.Ef;
 
-public class SqlConnectionFactory : ISqlConnectionFactory, IDisposable, IAsyncDisposable
+public class SqlConnectionFactory : ISqlConnectionFactory, IDisposable
 {
     private readonly string _connectionString;
-    private Npgsql.NpgsqlConnection? _connection;
+    private IDbConnection? _connection;
 
     public SqlConnectionFactory(string connectionString)
     {
@@ -21,7 +21,7 @@ public class SqlConnectionFactory : ISqlConnectionFactory, IDisposable, IAsyncDi
             return _connection;
         }
 
-        _connection = new NpgsqlConnection(_connectionString);
+        _connection = new SqlConnection(_connectionString);
         _connection.Open();
 
         return _connection;
@@ -36,16 +36,5 @@ public class SqlConnectionFactory : ISqlConnectionFactory, IDisposable, IAsyncDi
         
         _connection.Close();
         _connection.Dispose();
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_connection == null)
-        {
-            return;
-        }
-
-        await _connection.CloseAsync();
-        await _connection.DisposeAsync();
     }
 }

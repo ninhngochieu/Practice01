@@ -306,11 +306,11 @@ public static class DependencyInjection
                 failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy,
                 tags: ["db", "cache", "redis"]
             )
-            .AddNpgSql(builderConfiguration.GetConnectionString("Practice01StartupContextConnection") ??
-                       throw new InvalidOperationException(
-                           "Connection string 'Practice01StartupContextConnection' not found."), name: "postgres",
-                failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy,
-                tags: ["db", "sql"])
+            //.AddNpgSql(builderConfiguration.GetConnectionString("Practice01StartupContextConnection") ??
+            //           throw new InvalidOperationException(
+            //               "Connection string 'Practice01StartupContextConnection' not found."), name: "postgres",
+            //    failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy,
+            //    tags: ["db", "sql"])
             ;
 
         // For microservices
