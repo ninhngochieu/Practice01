@@ -28,8 +28,8 @@ public class DeleteUserDapperCommandHandler : IRequestHandler<DeleteUserDapperCo
         var rowCount =
             await sqlConnection.ExecuteAsync(@"
                 delete 
-                from ""AspNetUsers"" 
-                where ""Id"" = @Id",
+                from AspNetUsers 
+                where Id = @Id",
                 new { request.Id });
         if (rowCount == 0)
         {

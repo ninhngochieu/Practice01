@@ -33,11 +33,10 @@ public class UpdateUserDapperCommandHandler : IRequestHandler<UpdateUserDapperCo
         var exists =
             await sqlConnection.QueryFirstOrDefaultAsync<bool>(
                 @"
-                        select CAST(1 AS BOOLEAN) 
-                        from ""AspNetUsers"" anu 
+                        select top(1) CAST(1 AS BIT) 
+                        from AspNetUsers anu 
                         where 
-                            anu.""Id"" = @Id
-                            limit 1", new { request.Id });
+                            anu.Id = @Id", new { request.Id });
         if (!exists)
         {
             _errorCollector.Error(HttpStatusCode.BadRequest, "USER_NOT_FOUND", "User not found");
@@ -55,15 +54,15 @@ public class UpdateUserDapperCommandHandler : IRequestHandler<UpdateUserDapperCo
         };
 
         var rowCount = await sqlConnection.ExecuteAsync(@"
-                        update ""AspNetUsers"" anu 
+                        update AspNetUsers 
                         set 
-                            ""FirstName"" = @FirstName,
-                            ""LastName"" = @LastName,
-                            ""DateOfBirth"" = @DateOfBirth,
-                            ""Email"" = @Email,
-                            ""PhoneNumber"" = @PhoneNumber
+                            FirstName = @FirstName,
+                            LastName = @LastName,
+                            DateOfBirth = @DateOfBirth,
+                            Email = @Email,
+                            PhoneNumber = @PhoneNumber
                         where 
-                            anu.""Id"" = @Id", updatingInfo);
+                            Id = @Id", updatingInfo);
 
         if (rowCount == 0)
         {

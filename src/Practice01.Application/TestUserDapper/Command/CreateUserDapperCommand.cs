@@ -38,11 +38,10 @@ public class CreateUserDapperCommandHandler : IRequestHandler<CreateUserDapperCo
         var exists =
             await sqlConnection.QueryFirstOrDefaultAsync<bool>(
                 @"
-                        select CAST(1 AS BOOLEAN) 
-                        from ""AspNetUsers"" anu 
+                        select top(1) CAST(1 AS BIT) 
+                        from AspNetUsers anu 
                         where 
-                            anu.""UserName"" = @UserName 
-                            limit 1", new { request.UserName });
+                            anu.UserName = @UserName", new { request.UserName });
         if (exists)
         {
             _errorCollector.Error(HttpStatusCode.BadRequest, "USER_ALREADY_EXISTS", "User already exists");
@@ -74,25 +73,25 @@ public class CreateUserDapperCommandHandler : IRequestHandler<CreateUserDapperCo
         
         var rowCount = await sqlConnection.ExecuteAsync(
             @"
-                INSERT INTO ""AspNetUsers"" 
+                INSERT INTO AspNetUsers 
                 (
-                    ""Id"", 
-                    ""FirstName"", 
-                    ""LastName"", 
-                    ""DateOfBirth"", 
-                    ""IsActive"", 
-                    ""CreatedDate"", 
-                    ""UserName"", 
-                    ""NormalizedUserName"", 
-                    ""Email"", 
-                    ""NormalizedEmail"", 
-                    ""EmailConfirmed"", 
-                    ""PasswordHash"", 
-                    ""PhoneNumber"",
-                    ""PhoneNumberConfirmed"",
-                    ""TwoFactorEnabled"",
-                    ""LockoutEnabled"",
-                    ""AccessFailedCount""
+                    Id, 
+                    FirstName, 
+                    LastName, 
+                    DateOfBirth, 
+                    IsActive, 
+                    CreatedDate, 
+                    UserName, 
+                    NormalizedUserName, 
+                    Email, 
+                    NormalizedEmail, 
+                    EmailConfirmed, 
+                    PasswordHash, 
+                    PhoneNumber,
+                    PhoneNumberConfirmed,
+                    TwoFactorEnabled,
+                    LockoutEnabled,
+                    AccessFailedCount
                 ) 
                 VALUES 
                 (
