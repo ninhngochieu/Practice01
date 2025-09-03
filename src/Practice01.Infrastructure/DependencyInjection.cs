@@ -211,11 +211,13 @@ public static class DependencyInjection
                     .SetResourceBuilder(resourceBuilder)
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddSource("Practice01.Presentation") 
-                    .AddOtlpExporter(options =>
-                    {
-                        options.Endpoint = new Uri("http://otel-collector:4317");
-                    });
+                    .AddSource("Practice01.Presentation")
+                    .AddConsoleExporter()
+                    //.AddOtlpExporter(options =>
+                    //{
+                    //    options.Endpoint = new Uri("http://otel-collector:4317");
+                    //})
+                    ;
                 // gửi trace qua OTLP
             })
             .WithMetrics(metrics =>
@@ -225,10 +227,12 @@ public static class DependencyInjection
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddMeter("Practice01.Presentation")
-                    .AddOtlpExporter(options =>
-                    {
-                        options.Endpoint = new Uri("http://otel-collector:4317");
-                    });
+                    .AddConsoleExporter()
+                    //.AddOtlpExporter(options =>
+                    //{
+                    //    options.Endpoint = new Uri("http://otel-collector:4317");
+                    //})
+                    ;
             });
     }
 }
