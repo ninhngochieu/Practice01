@@ -58,6 +58,7 @@ var app = builder.Build();
 // app.UseMiddleware<ApiKeyMiddleware>();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<SerilogEnrichMiddleware>();
+app.UseMiddleware<HttpRequestMetricsMiddleware>();
 app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.

@@ -322,5 +322,7 @@ public static class DependencyInjection
         //         // options.AddHealthCheckEndpoint("Basic HealthCheck", "/health"); // endpoint gốc
         //     })
         //     .AddInMemoryStorage();
+
+        services.AddSingleton<HttpRequestMetricsMiddleware>();
     }
 }

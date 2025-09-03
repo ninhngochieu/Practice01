@@ -14,6 +14,7 @@ using Polly;
 using Practice01.Application.Common.Cache;
 using Practice01.Application.Common.Data;
 using Practice01.Application.Common.File;
+using Practice01.Application.Common.Metrics;
 using Practice01.Application.Common.Producers;
 using Practice01.Application.Common.Token;
 using Practice01.Application.Common.User;
@@ -25,6 +26,7 @@ using Practice01.Infrastructure.Data.MongoDb.Books;
 using Practice01.Infrastructure.Data.Redis;
 using Practice01.Infrastructure.Kafkaflow.Consumers;
 using Practice01.Infrastructure.Kafkaflow.Producers;
+using Practice01.Infrastructure.Metrics;
 using Practice01.Infrastructure.Provider;
 using Practice01.Infrastructure.Services;
 using Practice01.Infrastructure.Workers;
@@ -210,7 +212,7 @@ public static class DependencyInjection
                 tracing
                     .SetResourceBuilder(resourceBuilder)
                     .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
+                    //.AddHttpClientInstrumentation()
                     .AddSource("Practice01.Presentation")
                     .AddConsoleExporter()
                     //.AddOtlpExporter(options =>
@@ -225,7 +227,7 @@ public static class DependencyInjection
                 metrics
                     .SetResourceBuilder(resourceBuilder)
                     .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
+                    //.AddHttpClientInstrumentation()
                     .AddMeter("Practice01.Presentation")
                     .AddConsoleExporter()
                     //.AddOtlpExporter(options =>
@@ -234,5 +236,6 @@ public static class DependencyInjection
                     //})
                     ;
             });
+        services.AddSingleton<IHttpRequestMetricService, HttpRequestMetricService>();
     }
 }

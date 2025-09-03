@@ -22,11 +22,6 @@ public class TestOpenTelemetryController : ControllerBase
     // Tracing
     private static readonly ActivitySource ActivitySource = new("Practice01.Presentation");
 
-    // Metrics
-    private static readonly Meter Meter = new("Practice01.Presentation");
-    private static readonly Counter<int> RequestCounter =
-        Meter.CreateCounter<int>("test_requests_total", description: "Total requests to TestOpenTelemetryController");
-
     [HttpGet("trace")]
     public IResult GetTrace()
     {
@@ -39,14 +34,15 @@ public class TestOpenTelemetryController : ControllerBase
         return _customObjectResult.Return(result);
     }
 
-    [HttpGet("metric")]
-    public IResult GetMetric()
-    {
-        RequestCounter.Add(1,
-            new KeyValuePair<string, object?>("endpoint", "metric"),
-            new KeyValuePair<string, object?>("version", "v1"));
+    //[HttpGet("metric")]
+    //public IResult GetMetric()
+    //{
+    //    RequestCounter.Add(1,
+    //        new KeyValuePair<string, object?>("endpoint", "metric"),
+    //        new KeyValuePair<string, object?>("version", "v1"),
+    //        new KeyValuePair<string, object?>("version", "v2"));
 
-        var result = new { Message = "Metric incremented", Time = DateTime.UtcNow };
-        return _customObjectResult.Return(result);
-    }
+    //    var result = new { Message = "Metric incremented", Time = DateTime.UtcNow };
+    //    return _customObjectResult.Return(result);
+    //}
 }
