@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Practice01.Infrastructure.Data;
 using Practice01.Infrastructure.Data.Ef;
 
 #nullable disable
@@ -13,8 +12,8 @@ using Practice01.Infrastructure.Data.Ef;
 namespace Practice01.Infrastructure.Migrations
 {
     [DbContext(typeof(Practice01StartupContext))]
-    [Migration("20250822024606_SeedRole")]
-    partial class SeedRole
+    [Migration("20250903073131_InitialDbForSqlServer")]
+    partial class InitialDbForSqlServer
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,6 +107,38 @@ namespace Practice01.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("ba638760-5686-4e92-b4d5-59850381bd8b"),
+                            RoleId = new Guid("dc8bcc55-8540-4bb3-b45c-719ea1bce0f2")
+                        },
+                        new
+                        {
+                            UserId = new Guid("ba638760-5686-4e92-b4d5-59850381bd8b"),
+                            RoleId = new Guid("ddad094e-f7b4-446c-9639-9f7a695a4db8")
+                        },
+                        new
+                        {
+                            UserId = new Guid("ba638760-5686-4e92-b4d5-59850381bd8b"),
+                            RoleId = new Guid("0517ce8f-9d05-40ae-8c42-d93c8b5da363")
+                        },
+                        new
+                        {
+                            UserId = new Guid("b745d2be-dc7c-46ec-b4b3-da2c83099fd9"),
+                            RoleId = new Guid("ddad094e-f7b4-446c-9639-9f7a695a4db8")
+                        },
+                        new
+                        {
+                            UserId = new Guid("b745d2be-dc7c-46ec-b4b3-da2c83099fd9"),
+                            RoleId = new Guid("0517ce8f-9d05-40ae-8c42-d93c8b5da363")
+                        },
+                        new
+                        {
+                            UserId = new Guid("dbd9b6f3-12d6-4755-824c-2933ecce4c4a"),
+                            RoleId = new Guid("0517ce8f-9d05-40ae-8c42-d93c8b5da363")
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -129,7 +160,7 @@ namespace Practice01.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Practice01.Domain.Entities.Role", b =>
+            modelBuilder.Entity("Practice01.Domain.Entities.Roles.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -176,25 +207,25 @@ namespace Practice01.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5c7f0163-27a7-4de8-a448-ed7e77577442"),
+                            Id = new Guid("dc8bcc55-8540-4bb3-b45c-719ea1bce0f2"),
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = new Guid("21b6d6f3-e0cd-4aba-ae80-b41edea87b86"),
+                            Id = new Guid("ddad094e-f7b4-446c-9639-9f7a695a4db8"),
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = new Guid("53dd8b32-fbb2-40bb-88c9-819de4865740"),
+                            Id = new Guid("0517ce8f-9d05-40ae-8c42-d93c8b5da363"),
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });
                 });
 
-            modelBuilder.Entity("Practice01.Domain.Entities.User", b =>
+            modelBuilder.Entity("Practice01.Domain.Entities.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -291,11 +322,73 @@ namespace Practice01.Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("ba638760-5686-4e92-b4d5-59850381bd8b"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "",
+                            Email = "pA5eF@example.com",
+                            EmailConfirmed = true,
+                            FirstName = "",
+                            IsActive = true,
+                            LastName = "",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "pA5eF@example.com",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAIAAYagAAAAEASSqq7ChWdoxGFWUC7B16fx0UHMzc0Y+VNmleHpTGNB76yS1LalFjGlNxNnMmHG4g==",
+                            PhoneNumber = "+7(999)999-99-99",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "",
+                            TwoFactorEnabled = false,
+                            UserName = "admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("b745d2be-dc7c-46ec-b4b3-da2c83099fd9"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "",
+                            Email = "9D2L6@example.com",
+                            EmailConfirmed = true,
+                            FirstName = "",
+                            IsActive = true,
+                            LastName = "",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "9D2L6@example.com",
+                            NormalizedUserName = "MANAGER",
+                            PasswordHash = "AQAAAAIAAYagAAAAECAqw8avHslDPkmdaL0T+4+qwAGUEbkncssy+F7wMHaGxEyP3y65lURGWJXaBo7QFg==",
+                            PhoneNumber = "+7(999)999-99-99",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "",
+                            TwoFactorEnabled = false,
+                            UserName = "manager"
+                        },
+                        new
+                        {
+                            Id = new Guid("dbd9b6f3-12d6-4755-824c-2933ecce4c4a"),
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "",
+                            Email = "6tMf6@example.com",
+                            EmailConfirmed = true,
+                            FirstName = "",
+                            IsActive = true,
+                            LastName = "",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "6tMf6@example.com",
+                            NormalizedUserName = "MEMBER",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBpQELtDqip/TSJMu+00G1SNXBzuvRLcp7szSnkHWIiIbr6efi/fPcJxMLXE5eZU8A==",
+                            PhoneNumber = "+7(999)999-99-99",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "",
+                            TwoFactorEnabled = false,
+                            UserName = "member"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Practice01.Domain.Entities.Role", null)
+                    b.HasOne("Practice01.Domain.Entities.Roles.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -304,7 +397,7 @@ namespace Practice01.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Practice01.Domain.Entities.User", null)
+                    b.HasOne("Practice01.Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -313,7 +406,7 @@ namespace Practice01.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Practice01.Domain.Entities.User", null)
+                    b.HasOne("Practice01.Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -322,13 +415,13 @@ namespace Practice01.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Practice01.Domain.Entities.Role", null)
+                    b.HasOne("Practice01.Domain.Entities.Roles.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Practice01.Domain.Entities.User", null)
+                    b.HasOne("Practice01.Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -337,7 +430,7 @@ namespace Practice01.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Practice01.Domain.Entities.User", null)
+                    b.HasOne("Practice01.Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

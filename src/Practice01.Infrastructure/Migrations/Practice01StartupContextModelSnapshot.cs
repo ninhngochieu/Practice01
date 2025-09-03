@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using Practice01.Infrastructure.Data;
 using Practice01.Infrastructure.Data.Ef;
 
 #nullable disable
@@ -158,7 +157,7 @@ namespace Practice01.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Practice01.Domain.Entities.Role", b =>
+            modelBuilder.Entity("Practice01.Domain.Entities.Roles.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -223,7 +222,7 @@ namespace Practice01.Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Practice01.Domain.Entities.User", b =>
+            modelBuilder.Entity("Practice01.Domain.Entities.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -335,7 +334,7 @@ namespace Practice01.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "pA5eF@example.com",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKLc4wCc9E6qB9WKS5zp6IBMxPx7iAhHc398oPDnk1v1751JjgT5300w+MxWkUAphw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEASSqq7ChWdoxGFWUC7B16fx0UHMzc0Y+VNmleHpTGNB76yS1LalFjGlNxNnMmHG4g==",
                             PhoneNumber = "+7(999)999-99-99",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "",
@@ -355,7 +354,7 @@ namespace Practice01.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "9D2L6@example.com",
                             NormalizedUserName = "MANAGER",
-                            PasswordHash = "AQAAAAIAAYagAAAAENnMpMWlSK/4b3LV2ljXfum7Hqf012Gx6XCnW1at2E3OW5XM/BNskjBMX4DgnRLSNw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECAqw8avHslDPkmdaL0T+4+qwAGUEbkncssy+F7wMHaGxEyP3y65lURGWJXaBo7QFg==",
                             PhoneNumber = "+7(999)999-99-99",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "",
@@ -375,7 +374,7 @@ namespace Practice01.Infrastructure.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "6tMf6@example.com",
                             NormalizedUserName = "MEMBER",
-                            PasswordHash = "AQAAAAIAAYagAAAAEF/PjJMK0cUicohKoBzoZW2FkR4lEs1QFtqsAQDjDSBdlZ//SDaqT4cXbGi2QZjZOA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBpQELtDqip/TSJMu+00G1SNXBzuvRLcp7szSnkHWIiIbr6efi/fPcJxMLXE5eZU8A==",
                             PhoneNumber = "+7(999)999-99-99",
                             PhoneNumberConfirmed = true,
                             SecurityStamp = "",
@@ -386,7 +385,7 @@ namespace Practice01.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Practice01.Domain.Entities.Role", null)
+                    b.HasOne("Practice01.Domain.Entities.Roles.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -395,7 +394,7 @@ namespace Practice01.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
                 {
-                    b.HasOne("Practice01.Domain.Entities.User", null)
+                    b.HasOne("Practice01.Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -404,7 +403,7 @@ namespace Practice01.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
-                    b.HasOne("Practice01.Domain.Entities.User", null)
+                    b.HasOne("Practice01.Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -413,13 +412,13 @@ namespace Practice01.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.HasOne("Practice01.Domain.Entities.Role", null)
+                    b.HasOne("Practice01.Domain.Entities.Roles.Role", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Practice01.Domain.Entities.User", null)
+                    b.HasOne("Practice01.Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -428,7 +427,7 @@ namespace Practice01.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
-                    b.HasOne("Practice01.Domain.Entities.User", null)
+                    b.HasOne("Practice01.Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

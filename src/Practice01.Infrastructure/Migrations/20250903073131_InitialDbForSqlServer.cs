@@ -4,10 +4,12 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Practice01.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialDbForSqlServer : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -171,6 +173,39 @@ namespace Practice01.Infrastructure.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "CreatedBy", "CreatedDate", "DeletedBy", "DeletedDate", "LastModifiedBy", "LastModifiedDate", "Name", "NormalizedName" },
+                values: new object[,]
+                {
+                    { new Guid("0517ce8f-9d05-40ae-8c42-d93c8b5da363"), null, null, null, null, null, null, null, "Member", "MEMBER" },
+                    { new Guid("dc8bcc55-8540-4bb3-b45c-719ea1bce0f2"), null, null, null, null, null, null, null, "Administrator", "ADMINISTRATOR" },
+                    { new Guid("ddad094e-f7b4-446c-9639-9f7a695a4db8"), null, null, null, null, null, null, null, "Manager", "MANAGER" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "CreatedBy", "CreatedDate", "DateOfBirth", "DeletedBy", "DeletedDate", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastModifiedBy", "LastModifiedDate", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { new Guid("b745d2be-dc7c-46ec-b4b3-da2c83099fd9"), 0, "", null, null, null, null, null, "9D2L6@example.com", true, "", true, null, null, "", false, null, "9D2L6@example.com", "MANAGER", "AQAAAAIAAYagAAAAECAqw8avHslDPkmdaL0T+4+qwAGUEbkncssy+F7wMHaGxEyP3y65lURGWJXaBo7QFg==", "+7(999)999-99-99", true, "", false, "manager" },
+                    { new Guid("ba638760-5686-4e92-b4d5-59850381bd8b"), 0, "", null, null, null, null, null, "pA5eF@example.com", true, "", true, null, null, "", false, null, "pA5eF@example.com", "ADMIN", "AQAAAAIAAYagAAAAEASSqq7ChWdoxGFWUC7B16fx0UHMzc0Y+VNmleHpTGNB76yS1LalFjGlNxNnMmHG4g==", "+7(999)999-99-99", true, "", false, "admin" },
+                    { new Guid("dbd9b6f3-12d6-4755-824c-2933ecce4c4a"), 0, "", null, null, null, null, null, "6tMf6@example.com", true, "", true, null, null, "", false, null, "6tMf6@example.com", "MEMBER", "AQAAAAIAAYagAAAAEBpQELtDqip/TSJMu+00G1SNXBzuvRLcp7szSnkHWIiIbr6efi/fPcJxMLXE5eZU8A==", "+7(999)999-99-99", true, "", false, "member" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[,]
+                {
+                    { new Guid("0517ce8f-9d05-40ae-8c42-d93c8b5da363"), new Guid("b745d2be-dc7c-46ec-b4b3-da2c83099fd9") },
+                    { new Guid("ddad094e-f7b4-446c-9639-9f7a695a4db8"), new Guid("b745d2be-dc7c-46ec-b4b3-da2c83099fd9") },
+                    { new Guid("0517ce8f-9d05-40ae-8c42-d93c8b5da363"), new Guid("ba638760-5686-4e92-b4d5-59850381bd8b") },
+                    { new Guid("dc8bcc55-8540-4bb3-b45c-719ea1bce0f2"), new Guid("ba638760-5686-4e92-b4d5-59850381bd8b") },
+                    { new Guid("ddad094e-f7b4-446c-9639-9f7a695a4db8"), new Guid("ba638760-5686-4e92-b4d5-59850381bd8b") },
+                    { new Guid("0517ce8f-9d05-40ae-8c42-d93c8b5da363"), new Guid("dbd9b6f3-12d6-4755-824c-2933ecce4c4a") }
                 });
 
             migrationBuilder.CreateIndex(
