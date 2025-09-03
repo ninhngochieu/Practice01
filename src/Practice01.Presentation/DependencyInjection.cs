@@ -1,7 +1,3 @@
-using System.Diagnostics;
-using System.Text;
-using System.Text.Json;
-using System.Threading.RateLimiting;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,9 +11,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Practice01.Presentation.Common.EventSources;
 using Practice01.Presentation.Common.Handler;
 using Practice01.Presentation.Common.ObjectResult;
 using Practice01.Presentation.Middleware;
+using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
+using System.Threading.RateLimiting;
 
 namespace Practice01.Presentation;
 
@@ -324,5 +325,6 @@ public static class DependencyInjection
         //     .AddInMemoryStorage();
 
         services.AddSingleton<HttpRequestMetricsMiddleware>();
+        services.AddSingleton<MyAppEventSource>();
     }
 }

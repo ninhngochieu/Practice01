@@ -1,9 +1,10 @@
-using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Practice01.Presentation.Common.EventSources;
 using Practice01.Presentation.Common.ObjectResult;
+using System.Diagnostics;
+using System.Diagnostics.Metrics;
 
 namespace Practice01.Presentation.Controllers;
 
@@ -14,10 +15,12 @@ namespace Practice01.Presentation.Controllers;
 public class TestOpenTelemetryController : ControllerBase
 {
     private readonly CustomObjectResult _customObjectResult;
+    private readonly MyAppEventSource myAppEventSource;
 
-    public TestOpenTelemetryController(CustomObjectResult customObjectResult)
+    public TestOpenTelemetryController(CustomObjectResult customObjectResult, MyAppEventSource myAppEventSource)
     {
         _customObjectResult = customObjectResult;
+        this.myAppEventSource = myAppEventSource;
     }
     // Tracing
     private static readonly ActivitySource ActivitySource = new("Practice01.Presentation");
@@ -45,4 +48,11 @@ public class TestOpenTelemetryController : ControllerBase
     //    var result = new { Message = "Metric incremented", Time = DateTime.UtcNow };
     //    return _customObjectResult.Return(result);
     //}
+
+    [HttpGet("event-source")]
+    public IResult GetEventSource()
+    {
+        myAppEventSource.UserLoggedIn("Hieu", "Member");
+        return _customObjectResult.Return();
+    }
 }
