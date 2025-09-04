@@ -60,6 +60,7 @@ app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<SerilogEnrichMiddleware>();
 app.UseMiddleware<HttpRequestMetricsMiddleware>();
 app.UseSerilogRequestLogging();
+app.UseHttpLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
