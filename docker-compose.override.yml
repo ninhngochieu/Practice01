@@ -17,26 +17,29 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-    depends_on:
-      - redis
-      - mongo
+    networks:
+      - default-network
+    # depends_on:
+      # - redis
+      # - mongo
       # - postgres
-      - elasticsearch
+      # - elasticsearch
       # - otel-collector
+      # - mssql
         
-  redis:
-    image: redis:7-alpine
-    container_name: redis
-    ports:
-      - "6379:6379"
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: redis
+  #   ports:
+  #     - "6379:6379"
 
-  mongo:
-    image: mongo:6
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./mongo_data:/data/db
+  # mongo:
+  #   image: mongo:6
+  #   container_name: mongo
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - ./mongo_data:/data/db
 
   # postgres:
   #   image: postgres:15
@@ -50,68 +53,68 @@ services:
   #   volumes:
   #     - ./postgres_data:/var/lib/postgresql/data
 
-  mssql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    environment:
-        - ACCEPT_EULA=Y
-        - MSSQL_SA_PASSWORD=Passw0d1@
-    ports:
-        - 1433:1433
-    volumes:
-        - ./data:/var/opt/mssql/data
-        - ./log:/var/opt/mssql/log
-        - ./secrets:/var/opt/mssql/secrets
+  # mssql:
+  #   image: mcr.microsoft.com/mssql/server:2022-latest
+  #   environment:
+  #       - ACCEPT_EULA=Y
+  #       - MSSQL_SA_PASSWORD=Passw0d1@
+  #   ports:
+  #       - 1433:1433
+  #   volumes:
+  #       - ./data:/var/opt/mssql/data
+  #       - ./log:/var/opt/mssql/log
+  #       - ./secrets:/var/opt/mssql/secrets
 
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:9.1.2
-    container_name: elasticsearch
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false   # tắt auth cho dev
-      - ES_JAVA_OPTS=-Xms1g -Xmx1g     # memory limit
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    volumes:
-      - ./es_data:/usr/share/elasticsearch/data
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:9.1.2
+  #   container_name: elasticsearch
+  #   environment:
+  #     - discovery.type=single-node
+  #     - xpack.security.enabled=false   # tắt auth cho dev
+  #     - ES_JAVA_OPTS=-Xms1g -Xmx1g     # memory limit
+  #   ports:
+  #     - "9200:9200"
+  #     - "9300:9300"
+  #   volumes:
+  #     - ./es_data:/usr/share/elasticsearch/data
         
-  kibana:
-    image: docker.elastic.co/kibana/kibana:9.1.2
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    ports:
-      - "5601:5601"
-    depends_on:
-      - elasticsearch
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:9.1.2
+  #   container_name: kibana
+  #   environment:
+  #     - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+  #   ports:
+  #     - "5601:5601"
+  #   depends_on:
+  #     - elasticsearch
   
-  kafka:
-    image: bitnami/kafka:latest
-    environment:
-      - KAFKA_CFG_NODE_ID=0
-      - KAFKA_CFG_PROCESS_ROLES=controller,broker
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
-      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
-    ports:
-      - "9092:9092"
-      - "9093:9093"
-      - "9094:9094"
+  # kafka:
+  #   image: bitnami/kafka:latest
+  #   environment:
+  #     - KAFKA_CFG_NODE_ID=0
+  #     - KAFKA_CFG_PROCESS_ROLES=controller,broker
+  #     - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+  #     - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+  #     - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+  #     - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+  #     - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+  #     - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+  #     - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+  #   ports:
+  #     - "9092:9092"
+  #     - "9093:9093"
+  #     - "9094:9094"
         
-  kafka-ui:
-    image: provectuslabs/kafka-ui:latest
-    container_name: kafka-ui
-    ports:
-      - "9090:8080"
-    environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-    depends_on:
-      - kafka
+  # kafka-ui:
+  #   image: provectuslabs/kafka-ui:latest
+  #   container_name: kafka-ui
+  #   ports:
+  #     - "9090:8080"
+  #   environment:
+  #     KAFKA_CLUSTERS_0_NAME: local
+  #     KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+  #   depends_on:
+  #     - kafka
         
   # otel-collector:
   #   image: otel/opentelemetry-collector:latest
@@ -143,3 +146,7 @@ services:
   #   image: grafana/grafana:latest
   #   ports:
   #     - "3000:3000"
+
+networks:
+  default-network:
+    external: true
