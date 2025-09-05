@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using Practice01.Presentation.Common.EventSources;
 using Practice01.Presentation.Common.Handler;
 using Practice01.Presentation.Common.ObjectResult;
+using Practice01.Presentation.Interceptors;
 using Practice01.Presentation.Middleware;
 using System.Diagnostics;
 using System.Text;
@@ -326,5 +328,16 @@ public static class DependencyInjection
 
         services.AddSingleton<HttpRequestMetricsMiddleware>();
         services.AddSingleton<MyAppEventSource>();
+        services.AddHttpLogging(logging =>
+        {
+            logging.LoggingFields = HttpLoggingFields.All;
+            logging.RequestHeaders.Add("sec-ch-ua");
+            logging.ResponseHeaders.Add("MyResponseHeader");
+            logging.MediaTypeOptions.AddText("application/javascript");
+            logging.RequestBodyLogLimit = 4096;
+            logging.ResponseBodyLogLimit = 4096;
+            logging.CombineLogs = true;
+        });
+        services.AddHttpLoggingInterceptor<SampleHttpLoggingInterceptor>();
     }
 }
