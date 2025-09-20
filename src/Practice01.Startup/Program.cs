@@ -1,12 +1,9 @@
-using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using HealthChecks.UI.Client;
-using KafkaFlow;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Practice01.Application;
 using Practice01.Infrastructure;
-using Practice01.Infrastructure.Data;
 using Practice01.Infrastructure.Data.Ef;
 using Practice01.Infrastructure.Loggers;
 using Practice01.Presentation;
@@ -111,8 +108,8 @@ app.MapHealthChecks("/health", new HealthCheckOptions
 //     ;
 
 
-var kafkaBus = app.Services.CreateKafkaBus();
-await kafkaBus.StartAsync();
+//var kafkaBus = app.Services.CreateKafkaBus();
+//await kafkaBus.StartAsync();
 
 await app.RunAsync();
 

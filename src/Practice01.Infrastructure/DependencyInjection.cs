@@ -1,13 +1,8 @@
-using DnsClient;
 using Elastic.Clients.Elasticsearch;
-using KafkaFlow;
-using KafkaFlow.Serializer;
-using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -26,14 +21,11 @@ using Practice01.Infrastructure.Data.Ef;
 using Practice01.Infrastructure.Data.MongoDb;
 using Practice01.Infrastructure.Data.MongoDb.Books;
 using Practice01.Infrastructure.Data.Redis;
-using Practice01.Infrastructure.Kafkaflow.Consumers;
-using Practice01.Infrastructure.Kafkaflow.Producers;
 using Practice01.Infrastructure.Metrics;
 using Practice01.Infrastructure.Provider;
 using Practice01.Infrastructure.Services;
 using Practice01.Infrastructure.Workers;
 using Serilog;
-using Serilog.Core;
 using StackExchange.Redis;
 using Role = Practice01.Domain.Entities.Roles.Role;
 
@@ -120,40 +112,9 @@ public static class DependencyInjection
         services.AddKeyedSingleton<IResiliencePolicy, MongoResiliencePolicy>("MongoResiliencePolicy");
         services.AddKeyedSingleton<IResiliencePolicy, PostgresResiliencePolicy>("PostgresResiliencePolicy");
         services.AddKeyedSingleton<IResiliencePolicy, RedisResiliencePolicy>("RedisResiliencePolicy");
-
-        var kafkaBootstrapServers = builderConfiguration["Kafka:BootstrapServers"] ??
-                                    throw new InvalidOperationException("Kafka:BootstrapServers not found.");
-        const string producerName = "PrintConsole";
-        const string topicName = "sample-topic";
-        services.AddKafka(kafka => kafka
-            .UseConsoleLog()
-            .AddCluster(cluster => cluster
-                .WithBrokers([kafkaBootstrapServers])
-                .CreateTopicIfNotExists(topicName, 6, 1)
-                .AddProducer(
-                    producerName,
-                    producer => producer
-                        .DefaultTopic(topicName)
-                        .AddMiddlewares(m => m.AddSerializer<NewtonsoftJsonSerializer>())
-                )
-                .AddConsumer(consumer => consumer
-                    .Topic(topicName)
-                    .WithGroupId("print-console-handler")
-                    .WithBufferSize(100)
-                    .WithWorkersCount(3)
-                    .AddMiddlewares(middlewares => middlewares
-                        .AddDeserializer<NewtonsoftJsonDeserializer>()
-                        .AddTypedHandlers(h => h.AddHandler<PrintConsoleHandler>())
-                    )
-                )
-            )
-        );
-
-        // services.AddHostedService<PrintConsoleWorker>();
         services.AddKeyedSingleton("VietnamTimeZoneInfo",
             TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time"));
         services.AddSingleton<Practice01.Application.Common.Datetime.IDateTimeProvider, VietnameDateTimeProvider>();
-        services.AddSingleton<ITestMessageProducer, TestMessageProducer>();
         services.AddHostedService<SerilogToKafkaLogWorker>();
         services.AddHostedService<KafkaSerilogToElasticSearchWorker>();
         services.AddSingleton<ElasticsearchClient>(sp =>
