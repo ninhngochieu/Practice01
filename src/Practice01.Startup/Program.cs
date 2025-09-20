@@ -33,7 +33,7 @@ Log.Logger = new LoggerConfiguration()
                         "RequestId={RequestId} TraceId={TraceId}{NewLine}{Exception}"
     )
     .WriteTo.Kafka(
-        bootstrapServers: "kafka:9092",
+        bootstrapServers: "host.docker.internal:9092",
         topic: "logs.app",
         formatter: new JsonFormatter(renderMessage: true))
     .CreateLogger();

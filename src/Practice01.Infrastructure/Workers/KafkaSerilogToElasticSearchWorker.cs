@@ -39,68 +39,6 @@ public class KafkaSerilogToElasticSearchWorker : BackgroundService
         _elasticClient = new ElasticsearchClient(settings);
     }
 
-    //protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    //{
-    //    _logger.LogInformation("Kafka to Elasticsearch worker running...");
-
-    //    using var consumer = new ConsumerBuilder<Ignore, string>(_consumerConfig).Build();
-    //    consumer.Subscribe(_topic);
-
-    //    try
-    //    {
-    //        while (!stoppingToken.IsCancellationRequested)
-    //        {
-    //            var consumeResult = consumer.Consume(stoppingToken);
-    //            var logMessage = consumeResult.Message.Value;
-
-    //            if (string.IsNullOrEmpty(logMessage))
-    //            {
-    //                continue;
-    //            }
-
-    //            try
-    //            {
-    //                var logDocument = JsonDocument.Parse(logMessage);
-    //                var indexName = $"logs-{DateTime.UtcNow:yyyy.MM.dd}";
-
-    //                // Kiểm tra và tạo index nếu cần
-    //                await EnsureIndexExistsAsync(indexName, stoppingToken);
-
-    //                // Gửi log đến Elasticsearch
-    //                var response = await _elasticClient.IndexAsync(logDocument.RootElement, i => i.Index(indexName),
-    //                    stoppingToken);
-
-    //                if (!response.IsSuccess())
-    //                {
-    //                    _logger.LogError("Failed to index document to Elasticsearch. Error: {error}",
-    //                        response.DebugInformation);
-    //                }
-    //                else
-    //                {
-    //                    _logger.LogInformation(
-    //                        "Successfully indexed a log document to Elasticsearch index '{indexName}'.", indexName);
-    //                }
-    //            }
-    //            catch (JsonException ex)
-    //            {
-    //                _logger.LogError(ex, "Failed to parse log message as JSON: {logMessage}", logMessage);
-    //            }
-    //            catch (Exception ex)
-    //            {
-    //                _logger.LogError(ex, "Error processing log message: {logMessage}", logMessage);
-    //            }
-    //        }
-    //    }
-    //    catch (OperationCanceledException)
-    //    {
-    //        _logger.LogInformation("Kafka consumer worker is stopping.");
-    //    }
-    //    finally
-    //    {
-    //        consumer.Close();
-    //    }
-    //}
-
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("Kafka to Elasticsearch worker running...");
